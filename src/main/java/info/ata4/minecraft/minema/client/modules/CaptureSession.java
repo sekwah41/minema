@@ -223,7 +223,7 @@ public class CaptureSession extends ACaptureModule {
 
 	private void playChickenPlop() {
 		try {
-			MC.theWorld.playSound(MC.thePlayer, MC.thePlayer.playerLocation, SoundEvents.entity_chicken_egg,
+			MC.theWorld.playSound(MC.thePlayer, MC.thePlayer.playerLocation, SoundEvents.ENTITY_CHICKEN_EGG,
 					SoundCategory.NEUTRAL, 1, 1);
 		} catch (final Exception e) {
 			L.error("cannot play chicken plop", e);

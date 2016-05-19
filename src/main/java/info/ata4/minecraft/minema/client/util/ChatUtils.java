@@ -29,7 +29,7 @@ public class ChatUtils {
 
 		final GuiNewChat chat = MC.ingameGUI.getChatGUI();
 		final TextComponentTranslation ret = new TextComponentTranslation(msg, args);
-		ret.getChatStyle().setColor(format);
+		ret.getStyle().setColor(format);
 
 		chat.printChatMessage(ret);
 	}
