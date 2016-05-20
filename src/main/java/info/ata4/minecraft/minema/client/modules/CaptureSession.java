@@ -105,10 +105,10 @@ public class CaptureSession extends ACaptureModule {
 
 		// configure framebuffer capturer
 		if (PBOCapturer.isSupported) {
-			capturer = new PBOCapturer();
+			this.capturer = new PBOCapturer();
 			System.out.println("Using PBO: true");
 		} else {
-			capturer = new FramebufferCapturer();
+			this.capturer = new FramebufferCapturer();
 			System.out.println("Using PBO: false");
 		}
 		exporter.configureCapturer(this.capturer);
@@ -118,7 +118,7 @@ public class CaptureSession extends ACaptureModule {
 
 	@Override
 	protected void doDisable() {
-		capturer.close();
+		this.capturer.close();
 		// disable and unregister modules
 		for (final ACaptureModule module : this.modules) {
 			try {

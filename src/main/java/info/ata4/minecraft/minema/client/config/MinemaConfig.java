@@ -103,8 +103,9 @@ public class MinemaConfig extends ConfigContainer {
 
 	public int getFrameWidth() {
 		int width = this.frameWidth.get();
-		if (width == 0) // Zero is default setting
+		if (width == 0) {
 			width = Display.getWidth();
+		}
 
 		if (this.useVideoEncoder.get()) {
 			width = this.snapResolution.get().snap(width);
@@ -115,8 +116,9 @@ public class MinemaConfig extends ConfigContainer {
 
 	public int getFrameHeight() {
 		int height = this.frameHeight.get();
-		if (height == 0) // Zero is default setting
+		if (height == 0) {
 			height = Display.getHeight();
+		}
 
 		if (this.useVideoEncoder.get()) {
 			height = this.snapResolution.get().snap(height);

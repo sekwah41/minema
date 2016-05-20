@@ -55,8 +55,9 @@ public class PipeFrameExporter extends FrameExporter {
 
 		final List<String> cmds = new ArrayList<String>();
 		cmds.add(this.cfg.videoEncoderPath.get());
-		for (String s : StringUtils.split(params, ' '))
+		for (final String s : StringUtils.split(params, ' ')) {
 			cmds.add(s);
+		}
 
 		// build encoder process
 		final ProcessBuilder pb = new ProcessBuilder(cmds);

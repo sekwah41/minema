@@ -36,9 +36,9 @@ public class FramebufferCapturer extends ACapturer {
 		if (isFramebufferEnabled) {
 			final Framebuffer fb = MC.getFramebuffer();
 			glBindTexture(GL_TEXTURE_2D, fb.framebufferTexture);
-			glGetTexImage(GL_TEXTURE_2D, 0, colorFormat, TYPE, this.buffer);
+			glGetTexImage(GL_TEXTURE_2D, 0, this.colorFormat, TYPE, this.buffer);
 		} else {
-			glReadPixels(0, 0, start.getWidth(), start.getHeight(), colorFormat, TYPE, this.buffer);
+			glReadPixels(0, 0, this.start.getWidth(), this.start.getHeight(), this.colorFormat, TYPE, this.buffer);
 		}
 	}
 

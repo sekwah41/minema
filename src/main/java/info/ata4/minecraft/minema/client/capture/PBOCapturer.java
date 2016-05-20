@@ -35,28 +35,28 @@ public class PBOCapturer extends ACapturer {
 
 	public PBOCapturer() {
 		this.frontAddress = glGenBuffersARB();
-		glBindBufferARB(PACK_MODE, frontAddress);
-		glBufferDataARB(PACK_MODE, bufferSize, STREAM_READ);
+		glBindBufferARB(PACK_MODE, this.frontAddress);
+		glBufferDataARB(PACK_MODE, this.bufferSize, STREAM_READ);
 
 		this.backAddress = glGenBuffersARB();
-		glBindBufferARB(PACK_MODE, backAddress);
-		glBufferDataARB(PACK_MODE, bufferSize, STREAM_READ);
+		glBindBufferARB(PACK_MODE, this.backAddress);
+		glBufferDataARB(PACK_MODE, this.bufferSize, STREAM_READ);
 
 		glBindBufferARB(PACK_MODE, 0);
 	}
 
 	private void swapPBOs() {
-		int swapAddress = this.frontAddress;
-		frontAddress = backAddress;
-		backAddress = swapAddress;
-		ByteBuffer swapGlBuffer = frontCache;
-		frontCache = backCache;
-		backCache = swapGlBuffer;
+		final int swapAddress = this.frontAddress;
+		this.frontAddress = this.backAddress;
+		this.backAddress = swapAddress;
+		final ByteBuffer swapGlBuffer = this.frontCache;
+		this.frontCache = this.backCache;
+		this.backCache = swapGlBuffer;
 	}
 
 	@Override
 	public void capture() {
-		glBindBufferARB(PACK_MODE, frontAddress);
+		glBindBufferARB(PACK_MODE, this.frontAddress);
 
 		// Calling into event queue
 
@@ -66,12 +66,13 @@ public class PBOCapturer extends ACapturer {
 
 		// use faster framebuffer access if enabled
 		if (isFramebufferEnabled) {
-			Framebuffer buffer = MC.getFramebuffer();
+			final Framebuffer buffer = MC.getFramebuffer();
 			buffer.bindFramebufferTexture();
-			GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, colorFormat, GL_UNSIGNED_BYTE, 0L);
+			GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, this.colorFormat, GL_UNSIGNED_BYTE, 0L);
 			buffer.unbindFramebufferTexture();
 		} else {
-			GL11.glReadPixels(0, 0, start.getWidth(), start.getHeight(), colorFormat, GL_UNSIGNED_BYTE, 0);
+			GL11.glReadPixels(0, 0, this.start.getWidth(), this.start.getHeight(), this.colorFormat, GL_UNSIGNED_BYTE,
+					0);
 		}
 
 		// Not calling into event queue
@@ -80,16 +81,16 @@ public class PBOCapturer extends ACapturer {
 
 		swapPBOs();
 
-		glBindBufferARB(PACK_MODE, frontAddress);
+		glBindBufferARB(PACK_MODE, this.frontAddress);
 
-		frontCache = glMapBufferARB(PACK_MODE, READ_ONLY_ACCESS, bufferSize, frontCache);
+		this.frontCache = glMapBufferARB(PACK_MODE, READ_ONLY_ACCESS, this.bufferSize, this.frontCache);
 		// If mapping threw an error -> crash immediately please
 		Util.checkGLError();
-		this.buffer.put(frontCache);
+		this.buffer.put(this.frontCache);
 		// Recycling native buffers also needs rewinding! Not doing so would
 		// result in fast line flipping of the first frame (or not if you do not
 		// use PipeExporter) -> a symptom of not writing due to not rewinding
-		frontCache.rewind();
+		this.frontCache.rewind();
 		glUnmapBufferARB(PACK_MODE);
 
 		glBindBufferARB(PACK_MODE, 0);
@@ -97,8 +98,8 @@ public class PBOCapturer extends ACapturer {
 
 	@Override
 	public void close() {
-		glDeleteBuffersARB(frontAddress);
-		glDeleteBuffersARB(backAddress);
+		glDeleteBuffersARB(this.frontAddress);
+		glDeleteBuffersARB(this.backAddress);
 	}
 
 }

@@ -35,12 +35,12 @@ public abstract class ACapturer {
 	}
 
 	private void prepareByteBuffer() {
-		if (flipLine1 == null || flipLine2 == null) {
+		if (this.flipLine1 == null || this.flipLine2 == null) {
 			return;
 		}
 
-		final int currentWidth = start.getWidth();
-		final int currentHeight = start.getHeight();
+		final int currentWidth = this.start.getWidth();
+		final int currentHeight = this.start.getHeight();
 
 		// flip buffer vertically
 		for (int i = 0; i < currentHeight / 2; i++) {
@@ -70,17 +70,17 @@ public abstract class ACapturer {
 		// frame and about 1.7 GB for 10 seconds in 60fps)
 		// I know that this is not good practice, but it does not matter and
 		// optimizes a lot
-		return buffer;
+		return this.buffer;
 	}
 
 	public final void doCapture() {
 		final int currentWidth = MC.displayWidth;
 		final int currentHeight = MC.displayHeight;
 		// check if the dimensions are still the same
-		if (currentWidth != start.getWidth() || currentHeight != start.getHeight()) {
+		if (currentWidth != this.start.getWidth() || currentHeight != this.start.getHeight()) {
 			throw new IllegalStateException(
 					String.format("Display size changed! %dx%d not equals the start dimension of %dx%d", currentWidth,
-							currentHeight, start.getWidth(), start.getHeight()));
+							currentHeight, this.start.getWidth(), this.start.getHeight()));
 		}
 
 		// Rewind after writting
@@ -93,12 +93,12 @@ public abstract class ACapturer {
 	}
 
 	public final void setFlipLines() {
-		flipLine1 = new byte[start.getWidth() * bytesPerPixel];
-		flipLine2 = new byte[start.getWidth() * bytesPerPixel];
+		this.flipLine1 = new byte[this.start.getWidth() * bytesPerPixel];
+		this.flipLine2 = new byte[this.start.getWidth() * bytesPerPixel];
 	}
 
 	public final void setToRGBMode() {
-		colorFormat = GL_RGB;
+		this.colorFormat = GL_RGB;
 	}
 
 	protected abstract void capture();
