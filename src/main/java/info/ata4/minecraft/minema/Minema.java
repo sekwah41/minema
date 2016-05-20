@@ -31,12 +31,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-@Mod(modid = Minema.ID, name = Minema.NAME, version = Minema.VERSION, guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
+@Mod(modid = Minema.ID, name = Minema.ID, version = Minema.VERSION, guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
 public final class Minema {
 
-	public static final String NAME = "Minema";
-	public static final String ID = NAME;
-	public static final String VERSION = "1.9";
+	public static final String ID = "Minema";
+	public static final String VERSION = "1.9.4";
 
 	@Instance(ID)
 	public static Minema instance;
