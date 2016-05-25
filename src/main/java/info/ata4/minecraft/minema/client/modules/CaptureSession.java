@@ -29,7 +29,6 @@ import info.ata4.minecraft.minema.client.util.CaptureTime;
 import info.ata4.minecraft.minema.client.util.ChatUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
@@ -147,6 +146,7 @@ public class CaptureSession extends ACaptureModule {
 		}
 		this.cfg.setMovieDir(null);
 
+		playChickenPlop();
 	}
 
 	@Override
@@ -222,9 +222,10 @@ public class CaptureSession extends ACaptureModule {
 	}
 
 	private void playChickenPlop() {
+		if (MC.thePlayer == null)
+			L.warn("cannot play chicken plop due to missing player access: are you on a multiplayer server?");
 		try {
-			MC.theWorld.playSound(MC.thePlayer, MC.thePlayer.playerLocation, SoundEvents.ENTITY_CHICKEN_EGG,
-					SoundCategory.NEUTRAL, 1, 1);
+			MC.thePlayer.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1, 1);
 		} catch (final Exception e) {
 			L.error("cannot play chicken plop", e);
 		}
