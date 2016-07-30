@@ -30,10 +30,15 @@ import net.minecraftforge.fml.common.eventhandler.EventBus;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-@Mod(modid = Minema.ID, name = Minema.ID, version = Minema.VERSION, guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
+@Mod(modid = Minema.ID, name = Minema.NAME, version = Minema.VERSION, guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
 public class Minema {
 
-	public static final String ID = "Minema";
+	public static final String NAME = "Minema";
+	/*
+	 * in 1.11 Forge will only accept a lower case id and due to annotations
+	 * this has to be a constant expression
+	 */
+	public static final String ID = "minema";
 	public static final String VERSION = "1.10.2";
 
 	@Instance(ID)
