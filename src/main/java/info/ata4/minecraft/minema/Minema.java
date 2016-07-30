@@ -9,10 +9,11 @@
  */
 package info.ata4.minecraft.minema;
 
+import java.io.File;
+
 import info.ata4.minecraft.minema.client.cmd.CommandMinema;
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import info.ata4.minecraft.minema.client.modules.CaptureSession;
-import java.io.File;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -29,66 +30,60 @@ import net.minecraftforge.fml.common.eventhandler.EventBus;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-@Mod(
-    modid = Minema.ID,
-    name = Minema.NAME,
-    version = Minema.VERSION,
-    guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory"
-)
+@Mod(modid = Minema.ID, name = Minema.ID, version = Minema.VERSION, guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
 public class Minema {
 
-    public static final String NAME = "Minema";
-    public static final String ID = NAME;
-    public static final String VERSION = "@VERSION@";
+	public static final String ID = "Minema";
+	public static final String VERSION = "1.9.4";
 
-    @Instance(ID)
-    public static Minema instance;
-    public static final EventBus EVENT_BUS = new EventBus();
+	@Instance(ID)
+	public static Minema instance;
+	public static final EventBus EVENT_BUS = new EventBus();
 
-    private ModMetadata metadata;
-    private Configuration configForge;
-    private MinemaConfig config;
-    private CaptureSession session;
+	private ModMetadata metadata;
+	private Configuration configForge;
+	private MinemaConfig config;
+	private CaptureSession session;
 
-    @EventHandler
-    public void onPreInit(FMLPreInitializationEvent evt) {
-        File file = evt.getSuggestedConfigurationFile();
-        configForge = new Configuration(file);
-        config = new MinemaConfig(configForge);
-        metadata = evt.getModMetadata();
-    }
+	@EventHandler
+	public void onPreInit(FMLPreInitializationEvent evt) {
+		File file = evt.getSuggestedConfigurationFile();
+		configForge = new Configuration(file);
+		config = new MinemaConfig(configForge);
+		metadata = evt.getModMetadata();
+	}
 
-    @EventHandler
-    public void onInit(FMLInitializationEvent evt) {
-        ClientCommandHandler.instance.registerCommand(new CommandMinema(this));
-        MinecraftForge.EVENT_BUS.register(new KeyHandler(this));
-    }
-    
-    public Configuration getConfigForge() {
-        return configForge;
-    }
+	@EventHandler
+	public void onInit(FMLInitializationEvent evt) {
+		ClientCommandHandler.instance.registerCommand(new CommandMinema(this));
+		MinecraftForge.EVENT_BUS.register(new KeyHandler(this));
+	}
 
-    public MinemaConfig getConfig() {
-        return config;
-    }
+	public Configuration getConfigForge() {
+		return configForge;
+	}
 
-    public ModMetadata getMetadata() {
-        return metadata;
-    }
+	public MinemaConfig getConfig() {
+		return config;
+	}
 
-    public void enable() {
-        session = new CaptureSession(config);
-        session.enable();
-    }
+	public ModMetadata getMetadata() {
+		return metadata;
+	}
 
-    public void disable() {
-        if (isEnabled()) {
-            session.disable();
-        }
-        session = null;
-    }
+	public void enable() {
+		session = new CaptureSession(config);
+		session.enable();
+	}
 
-    public boolean isEnabled() {
-        return session != null && session.isEnabled();
-    }
+	public void disable() {
+		if (isEnabled()) {
+			session.disable();
+		}
+		session = null;
+	}
+
+	public boolean isEnabled() {
+		return session != null && session.isEnabled();
+	}
 }
