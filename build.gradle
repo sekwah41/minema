@@ -18,6 +18,13 @@ targetCompatibility = "1.8"
 version = "1.10.2"
 archivesBaseName = "Minema"
 
+jar {
+	manifest {
+        attributes 'FMLCorePlugin': 'info.ata4.minecraft.minema.shaderHook_coremod.ShaderHookLoader'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 minecraft {
     version = "1.10.2-12.18.1.2042"
     runDir = "run"
