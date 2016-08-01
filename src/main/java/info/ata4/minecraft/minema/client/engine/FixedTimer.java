@@ -25,7 +25,13 @@ public class FixedTimer extends Timer {
 	private final float ticksPerSecond;
 	private final float framesPerSecond;
 
-	private static float frameTimeCounter;
+	/*
+	 * Timespan between frames is 1/framesPerSecond (same as frequency and
+	 * period in physics) -> the shader mod just measures the time between
+	 * frames, in this context it is a constant time
+	 */
+	private final float frameTimeCounter_step;
+	private float frameTimeCounter;
 
 	public FixedTimer(float tps, float fps, float speed) {
 		super(tps);
@@ -33,6 +39,9 @@ public class FixedTimer extends Timer {
 		framesPerSecond = fps;
 		timerSpeed = speed;
 		frameTimeCounter = 0;
+		frameTimeCounter_step = 1 / (framesPerSecond * timerSpeed);
+
+		// Do not initialize with static constructor (might be too early)
 
 		if (shader_frameTimeCounter != null)
 			return;
@@ -56,16 +65,14 @@ public class FixedTimer extends Timer {
 		elapsedPartialTicks -= elapsedTicks;
 		renderPartialTicks = elapsedPartialTicks;
 
-		// Timespan between frames is 1/framesPerSecond -> the shaders mod just
-		// measures the time between frames, in this context it is the constant
-		// time
-		if (shader_frameTimeCounter != null) {
-			frameTimeCounter += 1 / (framesPerSecond * timerSpeed);
-			frameTimeCounter %= 3600;
-		}
+		if (shader_frameTimeCounter == null)
+			return;
+		// Shader mod analog code
+		frameTimeCounter += frameTimeCounter_step;
+		frameTimeCounter %= 3600;
 	}
 
-	public static void setFrameTimeCounter() {
+	public void setFrameTimeCounter() {
 		if (shader_frameTimeCounter == null)
 			return;
 		// this field is static, just using null as the object

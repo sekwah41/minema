@@ -9,14 +9,15 @@
  */
 package info.ata4.minecraft.minema.client.modules.modifiers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import info.ata4.minecraft.minema.client.engine.FixedTimer;
 import info.ata4.minecraft.minema.client.modules.CaptureModule;
 import info.ata4.minecraft.minema.util.reflection.PrivateAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Timer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -24,46 +25,62 @@ import org.apache.logging.log4j.Logger;
  */
 public class TimerModifier extends CaptureModule implements PrivateAccessor {
 
-    private static final Logger L = LogManager.getLogger();
-    private static final Minecraft MC = Minecraft.getMinecraft();
+	private static final Logger L = LogManager.getLogger();
+	private static final Minecraft MC = Minecraft.getMinecraft();
 
-    private float defaultTps;
+	private static FixedTimer timer = null;
 
-    public TimerModifier(MinemaConfig cfg) {
-        super(cfg);
-    }
+	private float defaultTps;
 
-    @Override
-    protected void doEnable() {
-        Timer defaultTimer = minecraftGetTimer(MC);
+	public TimerModifier(MinemaConfig cfg) {
+		super(cfg);
+	}
 
-        // check if it's modified already
-        if (defaultTimer instanceof FixedTimer) {
-            L.warn("Timer is already modified!");
-            return;
-        }
+	@Override
+	protected void doEnable() {
+		Timer defaultTimer = minecraftGetTimer(MC);
 
-        // get default ticks per second if possible
-        if (defaultTimer != null) {
-            defaultTps = timerGetTicksPerSecond(defaultTimer);
-        }
+		// check if it's modified already
+		if (defaultTimer instanceof FixedTimer) {
+			L.warn("Timer is already modified!");
+			return;
+		}
 
-        float fps = cfg.frameRate.get().floatValue();
-        float speed = cfg.engineSpeed.get().floatValue();
+		// get default ticks per second if possible
+		if (defaultTimer != null) {
+			defaultTps = timerGetTicksPerSecond(defaultTimer);
+		}
 
-        // set fixed delay timer
-        minecraftSetTimer(MC, new FixedTimer(defaultTps, fps, speed));
-    }
+		float fps = cfg.frameRate.get().floatValue();
+		float speed = cfg.engineSpeed.get().floatValue();
 
-    @Override
-    protected void doDisable() {
-        // check if it's still modified
-        if (!(minecraftGetTimer(MC) instanceof FixedTimer)) {
-            L.warn("Timer is already restored!");
-            return;
-        }
+		// set fixed delay timer
+		timer = new FixedTimer(defaultTps, fps, speed);
+		minecraftSetTimer(MC, new FixedTimer(defaultTps, fps, speed));
+	}
 
-        // restore default timer
-        minecraftSetTimer(MC, new Timer(defaultTps));
-    }
+	@Override
+	protected void doDisable() {
+		// check if it's still modified
+		if (!(minecraftGetTimer(MC) instanceof FixedTimer)) {
+			L.warn("Timer is already restored!");
+			return;
+		}
+
+		// restore default timer
+		timer = null;
+		minecraftSetTimer(MC, new Timer(defaultTps));
+	}
+
+	/**
+	 * CALLED BY ASM INJECTED CODE! (COREMOD) DO NOT MODIFY METHOD SIGNATURE!
+	 */
+	public static void setFrameTimeCounter() {
+		// This spot is right here because I can choose to only synchronize when
+		// recording right here
+		if (timer == null)
+			return;
+		timer.setFrameTimeCounter();
+	}
+
 }
