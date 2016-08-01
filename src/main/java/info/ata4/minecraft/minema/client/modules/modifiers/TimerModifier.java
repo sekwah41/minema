@@ -56,7 +56,7 @@ public class TimerModifier extends CaptureModule implements PrivateAccessor {
 
 		// set fixed delay timer
 		timer = new FixedTimer(defaultTps, fps, speed);
-		minecraftSetTimer(MC, new FixedTimer(defaultTps, fps, speed));
+		minecraftSetTimer(MC, timer);
 	}
 
 	@Override
