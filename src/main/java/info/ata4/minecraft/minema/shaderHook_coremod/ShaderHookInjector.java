@@ -61,8 +61,8 @@ public final class ShaderHookInjector implements IClassTransformer {
 						AbstractInsnNode currentNode = iterator.next();
 						if (doesMatchStaticCall(currentNode, calledClass, calledMethod, "()V")) {
 							iterator.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
-									"info/ata4/minecraft/minema/client/engine/FixedTimer", "setFrameTimeCounter", "()V",
-									false));
+									"info/ata4/minecraft/minema/client/modules/modifiers/TimerModifier",
+									"setFrameTimeCounter", "()V", false));
 							break;
 						}
 					}
