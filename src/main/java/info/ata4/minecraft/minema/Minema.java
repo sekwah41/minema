@@ -17,6 +17,7 @@ import info.ata4.minecraft.minema.client.modules.CaptureSession;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -62,6 +63,15 @@ public class Minema {
 	public void onInit(FMLInitializationEvent evt) {
 		ClientCommandHandler.instance.registerCommand(new CommandMinema(this));
 		MinecraftForge.EVENT_BUS.register(new KeyHandler(this));
+	}
+
+	@EventHandler
+	public void onConfigChanged(ConfigChangedEvent e) {
+		if (e.getModID().equals(ID)) {
+			if (configForge.hasChanged()) {
+				configForge.save();
+			}
+		}
 	}
 
 	public Configuration getConfigForge() {
