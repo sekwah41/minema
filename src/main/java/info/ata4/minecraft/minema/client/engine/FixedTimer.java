@@ -39,7 +39,7 @@ public class FixedTimer extends Timer {
 		framesPerSecond = fps;
 		timerSpeed = speed;
 		frameTimeCounter = 0;
-		frameTimeCounter_step = 1 / (framesPerSecond * timerSpeed);
+		frameTimeCounter_step = speed / fps;
 
 		// Do not initialize with static constructor (might be too early)
 
@@ -69,7 +69,7 @@ public class FixedTimer extends Timer {
 			return;
 		// Shader mod analog code
 		frameTimeCounter += frameTimeCounter_step;
-		frameTimeCounter %= 3600;
+		frameTimeCounter %= 3600.0F;
 	}
 
 	public void setFrameTimeCounter() {
