@@ -25,6 +25,7 @@ import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Main control class for Forge.
@@ -63,9 +64,10 @@ public class Minema {
 	public void onInit(FMLInitializationEvent evt) {
 		ClientCommandHandler.instance.registerCommand(new CommandMinema(this));
 		MinecraftForge.EVENT_BUS.register(new KeyHandler(this));
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	@EventHandler
+	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent e) {
 		if (e.getModID().equals(ID)) {
 			if (configForge.hasChanged()) {
