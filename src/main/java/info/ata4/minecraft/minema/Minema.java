@@ -41,7 +41,7 @@ public class Minema {
 	 * this has to be a constant expression
 	 */
 	public static final String ID = "minema";
-	public static final String VERSION = "1.10.2";
+	public static final String VERSION = "1.11";
 
 	@Instance(ID)
 	public static Minema instance;
