@@ -104,6 +104,6 @@ public class MinemaConfig {
     }
 
     public boolean isSyncEngine() {
-        return Minecraft.getMinecraft().isSingleplayer() && syncEngine.get();
+        return syncEngine.get();
     }
 }

@@ -74,8 +74,13 @@ public class CaptureSession extends CaptureModule {
         modules.add(new GameSettingsModifier(cfg));
 
         if (cfg.isSyncEngine()) {
-            modules.add(new TimerModifier(cfg));
-            modules.add(new TickSynchronizer(cfg));
+        	if (Minecraft.getMinecraft().isSingleplayer()) {
+                modules.add(new TimerModifier(cfg));
+                modules.add(new TickSynchronizer(cfg));
+        	} else {
+        		ChatUtils.print("WARNING!!!", TextFormatting.RED);
+        		ChatUtils.print("Tick sync and shader sync is NOT going to work! Always record in a local world!", TextFormatting.RED);
+        	}
         }
 
         if (cfg.useFrameSize()) {
