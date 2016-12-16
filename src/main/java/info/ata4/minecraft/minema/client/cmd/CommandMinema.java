@@ -29,12 +29,12 @@ public class CommandMinema extends CommandBase {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "minema";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         return "commands.minema.usage";
     }
 
@@ -42,7 +42,7 @@ public class CommandMinema extends CommandBase {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args)
             throws CommandException {
         if (args.length == 0) {
-            throw new WrongUsageException(getCommandUsage(sender));
+            throw new WrongUsageException(getUsage(sender));
         }
 
         String cmd = args[0];
@@ -55,7 +55,7 @@ public class CommandMinema extends CommandBase {
                 minema.disable();
                 break;
             default:
-                throw new WrongUsageException(getCommandUsage(sender));
+                throw new WrongUsageException(getUsage(sender));
         }
     }
 

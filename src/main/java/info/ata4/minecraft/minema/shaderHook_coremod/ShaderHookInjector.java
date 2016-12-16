@@ -15,11 +15,14 @@ import net.minecraft.launchwrapper.IClassTransformer;
 public final class ShaderHookInjector implements IClassTransformer {
 
 	// All obfuscated/deobfuscated mappings can be found in the .gradle
-	// directory (usually inside user directory) in the de/oceanlab MCP mapping
-	// files
+	// directory (usually inside user directory) in
+	// .gradle\caches\minecraft\de\oceanlabs\mcp\mcp_snapshot\XXXXXXXX\X.XX\srgs\mcp-notch.srg:
+	// Mappings for all classes, methods and fields
+	// Do not use methods.csv etc. because those might not be true (Why? Good
+	// question)
 
 	private static final String deobfuscatedClass = "net.minecraft.client.renderer.EntityRenderer";
-	// private static final String obfuscatedClass = "bnz";
+	// private static final String obfuscatedClass = "bqc";
 
 	private static final String deobfuscatedMethod = "renderWorld";
 	private static final String obfuscatedMethod = "b";
@@ -30,6 +33,7 @@ public final class ShaderHookInjector implements IClassTransformer {
 		// "obfuscated" argument may be deobfuscated or obfuscated
 
 		if (deobfuscatedClass.equals(deobfuscated)) {
+
 			final ClassReader classReader = new ClassReader(bytes);
 			final ClassNode classNode = new ClassNode();
 			classReader.accept(classNode, 0);
@@ -41,15 +45,13 @@ public final class ShaderHookInjector implements IClassTransformer {
 			for (final MethodNode m : classNode.methods) {
 				if (method.equals(m.name) && "(FJ)V".equals(m.desc)) {
 
-					// right after the GLStateManager.enableDepth call
-					// (bob#k)
-
+					// after the GLStateManager.enableDepth call:
 					// that is right after Optifine patches the source code to
-					// do some shader initialization including the
-					// frameTimeCounter
+					// call shadersmod/client/Shaders#beginRender which includes
+					// the initialization of frameTimeCounter
 
 					String calledClass = isInAlreadyDeobfuscatedState ? "net/minecraft/client/renderer/GlStateManager"
-							: "bob";
+							: "bqe";
 					String calledMethod = isInAlreadyDeobfuscatedState ? "enableDepth" : "k";
 
 					// find it (insert and insertBefore do not work because
@@ -80,14 +82,11 @@ public final class ShaderHookInjector implements IClassTransformer {
 	private boolean doesMatchStaticCall(AbstractInsnNode node, String calledClass, String calledMethod,
 			String signature) {
 		if (node.getOpcode() == Opcodes.INVOKESTATIC) {
-
 			MethodInsnNode methodCall = (MethodInsnNode) node;
-
 			if (methodCall.owner.equals(calledClass) && methodCall.name.equals(calledMethod)
 					&& methodCall.desc.equals(signature)) {
 				return true;
 			}
-
 		}
 
 		return false;
