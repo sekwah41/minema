@@ -31,31 +31,31 @@ public class FixedTimer extends Timer {
 	 * frames, in this context it is a constant time
 	 */
 	private final float frameTimeCounter_step;
-	private float frameTimeCounter;
+	private float fixedFrameTimeCounter;
 
 	public FixedTimer(float tps, float fps, float speed) {
 		super(tps);
+
+		// Not doing this with a static constructor because at a static point we
+		// cannot say for sure if shaders are already loaded
+		if (shader_frameTimeCounter == null) {
+			// Java 1.6 level and its catchy catch bloat up
+			Field frameTimeCounter = null;
+			try {
+				frameTimeCounter = Class.forName("shadersmod.client.Shaders").getDeclaredField("frameTimeCounter");
+				frameTimeCounter.setAccessible(true);
+			} catch (NoSuchFieldException e) {
+			} catch (SecurityException e) {
+			} catch (ClassNotFoundException e) {
+			}
+			shader_frameTimeCounter = frameTimeCounter;
+		}
+
 		ticksPerSecond = tps;
 		framesPerSecond = fps;
 		timerSpeed = speed;
-		frameTimeCounter = 0;
+		fixedFrameTimeCounter = getFrameTimeCounter();
 		frameTimeCounter_step = speed / fps;
-
-		// Do not initialize with static constructor (might be too early)
-
-		if (shader_frameTimeCounter != null)
-			return;
-
-		// Java 1.6 level and its catchy catch bloat up
-		Field frameTimeCounter = null;
-		try {
-			frameTimeCounter = Class.forName("shadersmod.client.Shaders").getDeclaredField("frameTimeCounter");
-			frameTimeCounter.setAccessible(true);
-		} catch (NoSuchFieldException e) {
-		} catch (SecurityException e) {
-		} catch (ClassNotFoundException e) {
-		}
-		shader_frameTimeCounter = frameTimeCounter;
 	}
 
 	@Override
@@ -68,8 +68,19 @@ public class FixedTimer extends Timer {
 		if (shader_frameTimeCounter == null)
 			return;
 		// Shader mod analog code
-		frameTimeCounter += frameTimeCounter_step;
-		frameTimeCounter %= 3600.0F;
+		fixedFrameTimeCounter += frameTimeCounter_step;
+		fixedFrameTimeCounter %= 3600.0F;
+	}
+
+	private float getFrameTimeCounter() {
+		if (shader_frameTimeCounter == null)
+			return 0;
+		// this field is static, just using null as the object
+		try {
+			return shader_frameTimeCounter.getFloat(null);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			return 0;
+		}
 	}
 
 	public void setFrameTimeCounter() {
@@ -77,7 +88,7 @@ public class FixedTimer extends Timer {
 			return;
 		// this field is static, just using null as the object
 		try {
-			shader_frameTimeCounter.setFloat(null, frameTimeCounter);
+			shader_frameTimeCounter.setFloat(null, fixedFrameTimeCounter);
 		} catch (IllegalArgumentException e) {
 		} catch (IllegalAccessException e) {
 		}
