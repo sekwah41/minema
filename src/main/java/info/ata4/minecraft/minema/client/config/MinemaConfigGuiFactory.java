@@ -10,6 +10,7 @@
 package info.ata4.minecraft.minema.client.config;
 
 import java.util.Set;
+
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.IModGuiFactory;
 
@@ -19,25 +20,25 @@ import net.minecraftforge.fml.client.IModGuiFactory;
  */
 public class MinemaConfigGuiFactory implements IModGuiFactory {
 
-    @Override
-    public void initialize(Minecraft mc) {
-    }
+	@Override
+	public void initialize(Minecraft mc) {
+	}
 
-    @Override
-    public Class<MinemaConfigGui> mainConfigGuiClass() {
-        return MinemaConfigGui.class;
-    }
+	@Override
+	public Class<MinemaConfigGui> mainConfigGuiClass() {
+		return MinemaConfigGui.class;
+	}
 
-    @Override
-    public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
-        // unused/unimplemented by Forge at time this was written
-        return null;
-    }
+	@Override
+	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
+		// unused/unimplemented by Forge at time this was written
+		return null;
+	}
 
-    @Override
-    public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
-        // unused/unimplemented by Forge at time this was written
-        return null;
-    }
+	@Override
+	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
+		// unused/unimplemented by Forge at time this was written
+		return null;
+	}
 
 }
