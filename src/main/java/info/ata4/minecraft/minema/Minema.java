@@ -9,23 +9,24 @@
  */
 package info.ata4.minecraft.minema;
 
-import java.io.File;
+import org.lwjgl.input.Keyboard;
 
-import info.ata4.minecraft.minema.client.cmd.CommandMinema;
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import info.ata4.minecraft.minema.client.modules.CaptureSession;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 /**
  * Main control class for Forge.
@@ -43,27 +44,27 @@ public class Minema {
 	public static final String ID = "minema";
 	public static final String VERSION = "1.11";
 
+	private static final String category = "key.categories.minema";
+	private static final KeyBinding KEY_CAPTURE = new KeyBinding("key.minema.capture", Keyboard.KEY_F4, category);
+
 	@Instance(ID)
 	public static Minema instance;
 	public static final EventBus EVENT_BUS = new EventBus();
 
-	private ModMetadata metadata;
 	private Configuration configForge;
 	private MinemaConfig config;
 	private CaptureSession session;
 
 	@EventHandler
-	public void onPreInit(FMLPreInitializationEvent evt) {
-		File file = evt.getSuggestedConfigurationFile();
-		configForge = new Configuration(file);
+	public void onPreInit(FMLPreInitializationEvent e) {
+		configForge = new Configuration(e.getSuggestedConfigurationFile());
 		config = new MinemaConfig(configForge);
-		metadata = evt.getModMetadata();
 	}
 
 	@EventHandler
 	public void onInit(FMLInitializationEvent evt) {
 		ClientCommandHandler.instance.registerCommand(new CommandMinema(this));
-		MinecraftForge.EVENT_BUS.register(new KeyHandler(this));
+		ClientRegistry.registerKeyBinding(KEY_CAPTURE);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -76,6 +77,32 @@ public class Minema {
 		}
 	}
 
+	@SubscribeEvent
+	public void onKeyInput(KeyInputEvent event) {
+		if (KEY_CAPTURE.isPressed()) {
+			if (!enable())
+				disable();
+		}
+	}
+
+	public boolean enable() {
+		if (session == null || !session.isEnabled()) {
+			session = new CaptureSession(config);
+			session.enable();
+			return true;
+		}
+		return false;
+	}
+
+	public boolean disable() {
+		if (session == null || !session.isEnabled()) {
+			return false;
+		}
+		session.disable();
+		session = null;
+		return true;
+	}
+
 	public Configuration getConfigForge() {
 		return configForge;
 	}
@@ -84,23 +111,4 @@ public class Minema {
 		return config;
 	}
 
-	public ModMetadata getMetadata() {
-		return metadata;
-	}
-
-	public void enable() {
-		session = new CaptureSession(config);
-		session.enable();
-	}
-
-	public void disable() {
-		if (isEnabled()) {
-			session.disable();
-		}
-		session = null;
-	}
-
-	public boolean isEnabled() {
-		return session != null && session.isEnabled();
-	}
 }
