@@ -22,7 +22,7 @@ public final class ShaderHookInjector implements IClassTransformer {
 	// question)
 
 	private static final String deobfuscatedClass = "net.minecraft.client.renderer.EntityRenderer";
-	// private static final String obfuscatedClass = "bqc";
+	// private static final String obfuscatedClass = "bqe";
 
 	private static final String deobfuscatedMethod = "renderWorld";
 	private static final String obfuscatedMethod = "b";
@@ -51,7 +51,7 @@ public final class ShaderHookInjector implements IClassTransformer {
 					// the initialization of frameTimeCounter
 
 					String calledClass = isInAlreadyDeobfuscatedState ? "net/minecraft/client/renderer/GlStateManager"
-							: "bqe";
+							: "bqg";
 					String calledMethod = isInAlreadyDeobfuscatedState ? "enableDepth" : "k";
 
 					// find it (insert and insertBefore do not work because
