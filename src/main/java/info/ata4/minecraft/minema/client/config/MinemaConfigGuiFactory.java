@@ -35,6 +35,7 @@ public class MinemaConfigGuiFactory implements IModGuiFactory {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
 		// unused/unimplemented by Forge at time this was written

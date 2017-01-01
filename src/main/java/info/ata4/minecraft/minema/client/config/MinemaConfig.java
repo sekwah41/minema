@@ -9,6 +9,10 @@
  */
 package info.ata4.minecraft.minema.client.config;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.lang3.text.WordUtils;
 import org.lwjgl.opengl.Display;
 
 import info.ata4.minecraft.minema.util.config.ConfigBoolean;
@@ -17,7 +21,11 @@ import info.ata4.minecraft.minema.util.config.ConfigEnum;
 import info.ata4.minecraft.minema.util.config.ConfigInteger;
 import info.ata4.minecraft.minema.util.config.ConfigString;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.config.IConfigElement;
 
 /**
  *
@@ -26,6 +34,12 @@ import net.minecraftforge.common.config.Configuration;
 public class MinemaConfig {
 
 	private static final int MAX_TEXTURE_SIZE = Minecraft.getGLMaximumTextureSize();
+
+	private final Configuration configForge;
+
+	private final ConfigCategory ENCODING_CATEGORY;
+	private final ConfigCategory CAPTURING_CATEGORY;
+	private final ConfigCategory ENGINE_CATEGORY;
 
 	public static final String LANG_KEY = "minema.config";
 
@@ -47,21 +61,44 @@ public class MinemaConfig {
 	public final ConfigBoolean syncEngine = new ConfigBoolean(true);
 
 	public MinemaConfig(Configuration cfg) {
-		useVideoEncoder.link(cfg, "encoding.useVideoEncoder", LANG_KEY);
-		videoEncoderPath.link(cfg, "encoding.videoEncoderPath", LANG_KEY);
-		videoEncoderParams.link(cfg, "encoding.videoEncoderParams", LANG_KEY);
-		snapResolution.link(cfg, "encoding.snapResolution", LANG_KEY);
+		this.configForge = cfg;
 
-		frameWidth.link(cfg, "capturing.frameWidth", LANG_KEY);
-		frameHeight.link(cfg, "capturing.frameHeight", LANG_KEY);
-		frameRate.link(cfg, "capturing.frameRate", LANG_KEY);
-		frameLimit.link(cfg, "capturing.frameLimit", LANG_KEY);
-		capturePath.link(cfg, "capturing.capturePath", LANG_KEY);
-		showOverlay.link(cfg, "capturing.showOverlay", LANG_KEY);
-		usePBO.link(cfg, "capturing.usePBO", LANG_KEY);
+		ENCODING_CATEGORY = cfg.getCategory("encoding");
+		CAPTURING_CATEGORY = cfg.getCategory("capturing");
+		ENGINE_CATEGORY = cfg.getCategory("engine");
 
-		engineSpeed.link(cfg, "engine.engineSpeed", LANG_KEY);
-		syncEngine.link(cfg, "engine.syncEngine", LANG_KEY);
+		for (ConfigCategory category : new ConfigCategory[] { ENCODING_CATEGORY, CAPTURING_CATEGORY,
+				ENGINE_CATEGORY }) {
+			String langKey = LANG_KEY + "." + category.getName();
+			String comment = WordUtils.wrap(I18n.format(langKey + ".tooltip"), 128);
+			category.setLanguageKey(langKey);
+			category.setComment(comment);
+		}
+
+		useVideoEncoder.link(cfg, ENCODING_CATEGORY, "useVideoEncoder", LANG_KEY);
+		videoEncoderPath.link(cfg, ENCODING_CATEGORY, "videoEncoderPath", LANG_KEY);
+		videoEncoderParams.link(cfg, ENCODING_CATEGORY, "videoEncoderParams", LANG_KEY);
+		snapResolution.link(cfg, ENCODING_CATEGORY, "snapResolution", LANG_KEY);
+
+		frameWidth.link(cfg, CAPTURING_CATEGORY, "frameWidth", LANG_KEY);
+		frameHeight.link(cfg, CAPTURING_CATEGORY, "frameHeight", LANG_KEY);
+		frameRate.link(cfg, CAPTURING_CATEGORY, "frameRate", LANG_KEY);
+		frameLimit.link(cfg, CAPTURING_CATEGORY, "frameLimit", LANG_KEY);
+		capturePath.link(cfg, CAPTURING_CATEGORY, "capturePath", LANG_KEY);
+		showOverlay.link(cfg, CAPTURING_CATEGORY, "showOverlay", LANG_KEY);
+		usePBO.link(cfg, CAPTURING_CATEGORY, "usePBO", LANG_KEY);
+
+		engineSpeed.link(cfg, ENGINE_CATEGORY, "engineSpeed", LANG_KEY);
+		syncEngine.link(cfg, ENGINE_CATEGORY, "syncEngine", LANG_KEY);
+	}
+
+	public Configuration getConfigForge() {
+		return configForge;
+	}
+
+	public List<IConfigElement> getCategoryElements() {
+		return Arrays.asList(new ConfigElement(ENCODING_CATEGORY), new ConfigElement(CAPTURING_CATEGORY),
+				new ConfigElement(ENGINE_CATEGORY));
 	}
 
 	public int getFrameWidth() {

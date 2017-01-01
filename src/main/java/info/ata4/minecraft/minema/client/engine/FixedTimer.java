@@ -16,7 +16,7 @@ import net.minecraft.util.Timer;
 /**
  * Extension of Minecraft's default timer for fixed framerate rendering.
  *
- * @author Nico Bergemann <barracuda415 at yahoo.de>
+ * @author Nico Bergemann <barracuda415 at yahoo.de> / Shader part: daipenger
  */
 public class FixedTimer extends Timer {
 

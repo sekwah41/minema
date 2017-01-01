@@ -12,12 +12,13 @@ package info.ata4.minecraft.minema.util.config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+
+import org.apache.commons.lang3.text.WordUtils;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
 
 /**
  *
@@ -25,70 +26,61 @@ import org.apache.commons.lang3.text.WordUtils;
  */
 public abstract class ConfigValue<T> {
 
-    private final T valueDefault;
-    private Supplier<Property> propSupplier;
+	private final T valueDefault;
+	private Supplier<Property> propSupplier;
 
-    public ConfigValue(T value) {
-        this.valueDefault = value;
-    }
-    
-    public void link(Configuration config, String name, String langKeyPrefix) {
-        String[] parts = StringUtils.split(name, '.');
-        String catName = parts[0];
-        String propName = parts[1];
-        
-        // set category language key and description
-        String catLangKey = langKeyPrefix + "." + catName;
-        String catDesc = WordUtils.wrap(I18n.format(catLangKey + ".tooltip"), 128);
+	public ConfigValue(T value) {
+		this.valueDefault = value;
+	}
 
-        // configure category and add property
-        ConfigCategory cat = config.getCategory(catName);
-        cat.setLanguageKey(catLangKey);
-        cat.setComment(catDesc);
+	public void link(Configuration config, ConfigCategory category, String propName, String langKeyPrefix) {
+		String catName = category.getName();
 
-        // set property language key and description
-        String propLangKey = langKeyPrefix + "." + propName;
-        String propDesc = WordUtils.wrap(I18n.format(propLangKey + ".tooltip"), 128);
+		// set property language key and description
+		String propLangKey = langKeyPrefix + "." + propName;
+		String propDesc = WordUtils.wrap(I18n.format(propLangKey + ".tooltip"), 128);
 
-        // create supplier so that later calls don't need all the variables above
-        propSupplier = () -> {
-            Property prop = config.get(catName, propName, getPropDefault(),
-                propDesc, getPropType());
-            prop.setLanguageKey(propLangKey);
-            return prop;
-        };
-        
-        // initialize prop
-        getProp();
-        
-        // make sure the properties have an insertion order
-        List<String> order = new ArrayList<>(cat.getPropertyOrder());
-        order.add(name);
-        cat.setPropertyOrder(order);
-    }
-    
-    protected abstract Property.Type getPropType();
+		// create supplier so that later calls don't need all the variables
+		// above
+		propSupplier = () -> {
+			Property prop = config.get(catName, propName, getPropDefault(), propDesc, getPropType());
+			prop.setLanguageKey(propLangKey);
+			return prop;
+		};
 
-    protected Property getProp() {
-        if (propSupplier == null) {
-            throw new IllegalStateException("ConfigValue hasn't been linked yet!");
-        }
-        return propSupplier.get();
-    }
-    
-    protected String getPropDefault() {
-        return String.valueOf(getDefault());
-    }
-    
-    public abstract T get();
+		// initialize prop
+		getProp();
 
-    public abstract void set(T value);
+		// make sure the properties have an insertion order
+		List<String> immutableOrder = category.getPropertyOrder();
+		ArrayList<String> newOrder = new ArrayList<>(immutableOrder.size() + 1);
+		newOrder.addAll(immutableOrder);
+		newOrder.add(category.getName() + "." + propName);
+		category.setPropertyOrder(newOrder);
+	}
 
-    public T getDefault() {
-        return valueDefault;
-    }
+	protected abstract Property.Type getPropType();
 
-    public void reset() {
-        set(getDefault());
-    }
+	protected Property getProp() {
+		if (propSupplier == null) {
+			throw new IllegalStateException("ConfigValue hasn't been linked yet!");
+		}
+		return propSupplier.get();
+	}
+
+	protected String getPropDefault() {
+		return String.valueOf(getDefault());
+	}
+
+	public abstract T get();
+
+	public abstract void set(T value);
+
+	public T getDefault() {
+		return valueDefault;
+	}
+
+	public void reset() {
+		set(getDefault());
+	}
 }

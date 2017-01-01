@@ -15,60 +15,61 @@ import net.minecraftforge.common.config.Property;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class ConfigEnum<T extends Enum> extends ConfigValue<T> {
+public class ConfigEnum<T extends Enum<T>> extends ConfigValue<T> {
 
-    private final Class<T> type;
-    private final String[] validValues;
+	private final Class<T> type;
+	private final String[] validValues;
 
-    public ConfigEnum(T value) {
-        super(value);
+	@SuppressWarnings("unchecked")
+	public ConfigEnum(T value) {
+		super(value);
 
-        type = (Class<T>) value.getClass();
+		type = (Class<T>) value.getClass();
 
-        T[] values = type.getEnumConstants();
-        validValues = new String[values.length];
-        for (int i = 0; i < values.length; i++) {
-            validValues[i] = enumToString(values[i]);
-        }
-    }
+		T[] values = type.getEnumConstants();
+		validValues = new String[values.length];
+		for (int i = 0; i < values.length; i++) {
+			validValues[i] = enumToString(values[i]);
+		}
+	}
 
-    private String enumToString(T e) {
-        return e.name().toLowerCase();
-    }
+	private String enumToString(T e) {
+		return e.name().toLowerCase();
+	}
 
-    private T stringToEnum(String name) {
-        return (T) Enum.valueOf(type, name.toUpperCase());
-    }
-    
-    @Override
-    protected Property.Type getPropType() {
-        return Property.Type.STRING;
-    }
-    
-    @Override
-    protected Property getProp() {
-        Property prop = super.getProp();
-        prop.setValidValues(validValues);
-        return prop;
-    }
-    
-    @Override
-    protected String getPropDefault() {
-        return enumToString(getDefault());
-    }
-   
-    @Override
-    public T get() {
-        try {
-            return stringToEnum(getProp().getString());
-        } catch (IllegalArgumentException ex) {
-            reset();
-            return stringToEnum(getProp().getString());
-        }
-    }
+	private T stringToEnum(String name) {
+		return (T) Enum.valueOf(type, name.toUpperCase());
+	}
 
-    @Override
-    public void set(T value) {
-        getProp().set(enumToString(get()));
-    }
+	@Override
+	protected Property.Type getPropType() {
+		return Property.Type.STRING;
+	}
+
+	@Override
+	protected Property getProp() {
+		Property prop = super.getProp();
+		prop.setValidValues(validValues);
+		return prop;
+	}
+
+	@Override
+	protected String getPropDefault() {
+		return enumToString(getDefault());
+	}
+
+	@Override
+	public T get() {
+		try {
+			return stringToEnum(getProp().getString());
+		} catch (IllegalArgumentException ex) {
+			reset();
+			return stringToEnum(getProp().getString());
+		}
+	}
+
+	@Override
+	public void set(T value) {
+		getProp().set(enumToString(get()));
+	}
 }

@@ -1,12 +1,3 @@
-/*
- ** 2013 April 09
- **
- ** The author disclaims copyright to this source code.  In place of
- ** a legal notice, here is a blessing:
- **    May you do good and not evil.
- **    May you find forgiveness for yourself and forgive others.
- **    May you share freely, never taking more than you give.
- */
 package info.ata4.minecraft.minema;
 
 import org.lwjgl.input.Keyboard;
@@ -29,9 +20,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 /**
- * Main control class for Forge.
- *
- * @author Nico Bergemann <barracuda415 at yahoo.de>
+ * Most of the files in this repo do have the old copyright notice about
+ * Barracuda even though I have touched most of it, in some cases substantially.
+ * Few classes do not contain the notice, these are the ones that I have written
+ * completely myself or some of the class with substantial changes.
+ * 
+ * @author Gregosteros (minecraftforum) / daipenger (github)
  */
 @Mod(modid = Minema.ID, name = Minema.NAME, version = Minema.VERSION, guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
 public class Minema {
@@ -51,14 +45,12 @@ public class Minema {
 	public static Minema instance;
 	public static final EventBus EVENT_BUS = new EventBus();
 
-	private Configuration configForge;
 	private MinemaConfig config;
 	private CaptureSession session;
 
 	@EventHandler
 	public void onPreInit(FMLPreInitializationEvent e) {
-		configForge = new Configuration(e.getSuggestedConfigurationFile());
-		config = new MinemaConfig(configForge);
+		config = new MinemaConfig(new Configuration(e.getSuggestedConfigurationFile()));
 	}
 
 	@EventHandler
@@ -71,8 +63,8 @@ public class Minema {
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent e) {
 		if (e.getModID().equals(ID)) {
-			if (configForge.hasChanged()) {
-				configForge.save();
+			if (config.getConfigForge().hasChanged()) {
+				config.getConfigForge().save();
 			}
 		}
 	}
@@ -101,10 +93,6 @@ public class Minema {
 		session.disable();
 		session = null;
 		return true;
-	}
-
-	public Configuration getConfigForge() {
-		return configForge;
 	}
 
 	public MinemaConfig getConfig() {
