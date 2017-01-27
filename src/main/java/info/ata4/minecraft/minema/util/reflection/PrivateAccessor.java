@@ -1,49 +1,112 @@
-/*
- ** 2014 July 28
- **
- ** The author disclaims copyright to this source code.  In place of
- ** a legal notice, here is a blessing:
- **    May you do good and not evil.
- **    May you find forgiveness for yourself and forgive others.
- **    May you share freely, never taking more than you give.
- */
 package info.ata4.minecraft.minema.util.reflection;
+
+import java.lang.reflect.Field;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Timer;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-/**
- *
- * @author Nico Bergemann <barracuda415 at yahoo.de>
- */
-public interface PrivateAccessor {
+public final class PrivateAccessor {
 
-    static final String[] TIMER_TICKSPERSECOND = new String[] { "ticksPerSecond", "field_74282_a" };
-    static final String[] MINECRAFT_TIMER = new String[] { "timer", "field_71428_T" };
+	// These classes can already be loaded or are already loaded by the JVM at
+	// this point (Minecraft core classes)
+	private static Field Minecraft_timer = getAccessibleField(Minecraft.class, "field_71428_T", "timer");
+	private static Field Timer_ticksPerSecond = getAccessibleField(Timer.class, "field_74282_a", "ticksPerSecond");
 
-    default Timer minecraftGetTimer(Minecraft mc) {
-        try {
-            return ReflectionHelper.getPrivateValue(Minecraft.class, mc, PrivateAccessor.MINECRAFT_TIMER);
-        } catch (Exception ex) {
-            throw new RuntimeException("Can't get timer", ex);
-        }
-    }
+	// These classes might not be able to be loaded by the JVM at this point
+	// (Mod classes of which the corresponding mod is not yet loaded)
+	private static Field Shaders_frameTimeCounter;
 
-    default void minecraftSetTimer(Minecraft mc, Timer timer) {
-        try {
-            ReflectionHelper.setPrivateValue(Minecraft.class, mc, timer, PrivateAccessor.MINECRAFT_TIMER);
-        } catch (Exception ex) {
-            throw new RuntimeException("Can't set timer", ex);
-        }
-    }
+	public static Timer getMinecraftTimer(Minecraft mc) {
+		if (Minecraft_timer != null) {
+			try {
+				return (Timer) Minecraft_timer.get(mc);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+			}
+		}
 
-    default float timerGetTicksPerSecond(Timer timer) {
-        try {
-            return ReflectionHelper.getPrivateValue(Timer.class, timer, PrivateAccessor.TIMER_TICKSPERSECOND);
-        } catch (Exception ex) {
-            // hard-coded default
-            return 20;
-        }
-    }    
+		throw new IllegalStateException("Cannot get timer");
+	}
+
+	public static void setMinecraftTimer(Minecraft mc, Timer timer) {
+		if (Minecraft_timer != null) {
+			try {
+				Minecraft_timer.set(mc, timer);
+				return;
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+			}
+		}
+
+		throw new IllegalStateException("Cannot set timer");
+	}
+
+	public static float getTimerTicksPerSecond(Timer timer) {
+		if (Timer_ticksPerSecond != null) {
+			try {
+				return (float) Timer_ticksPerSecond.get(timer);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+			}
+		}
+
+		// Minecraft default
+		return 20;
+	}
+
+	public static float getFrameTimeCounter() {
+		assureFrameTimeCounterField();
+
+		if (Shaders_frameTimeCounter != null) {
+			try {
+				// this field is static, just using null as the object
+				return Shaders_frameTimeCounter.getFloat(null);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+			}
+		}
+
+		// just a default
+		return 0;
+	}
+
+	public static void setFrameTimeCounter(float frameTimerCounter) {
+		assureFrameTimeCounterField();
+
+		if (Shaders_frameTimeCounter != null) {
+			try {
+				// this field is static, just using null as the object
+				Shaders_frameTimeCounter.setFloat(null, frameTimerCounter);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+			}
+		}
+	}
+
+	/*
+	 * Utility and assure methods
+	 */
+
+	private static Field getAccessibleField(Class<?> clazz, String... names) {
+		for (String name : names) {
+			try {
+				Field field = clazz.getDeclaredField(name);
+				field.setAccessible(true);
+				return field;
+			} catch (NoSuchFieldException | SecurityException e) {
+			}
+		}
+
+		return null;
+	}
+
+	private static Field getAccessibleField(String clazz, String... names) {
+		try {
+			return getAccessibleField(Class.forName(clazz), names);
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
+	}
+
+	private static void assureFrameTimeCounterField() {
+		if (Shaders_frameTimeCounter == null) {
+			Shaders_frameTimeCounter = getAccessibleField("shadersmod.client.Shaders", "frameTimeCounter");
+		}
+	}
+
 }

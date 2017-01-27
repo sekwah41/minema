@@ -23,7 +23,7 @@ import net.minecraft.util.Timer;
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
-public class TimerModifier extends CaptureModule implements PrivateAccessor {
+public class TimerModifier extends CaptureModule {
 
 	private static final Logger L = LogManager.getLogger();
 	private static final Minecraft MC = Minecraft.getMinecraft();
@@ -38,7 +38,7 @@ public class TimerModifier extends CaptureModule implements PrivateAccessor {
 
 	@Override
 	protected void doEnable() {
-		Timer defaultTimer = minecraftGetTimer(MC);
+		Timer defaultTimer = PrivateAccessor.getMinecraftTimer(MC);
 
 		// check if it's modified already
 		if (defaultTimer instanceof FixedTimer) {
@@ -48,7 +48,7 @@ public class TimerModifier extends CaptureModule implements PrivateAccessor {
 
 		// get default ticks per second if possible
 		if (defaultTimer != null) {
-			defaultTps = timerGetTicksPerSecond(defaultTimer);
+			defaultTps = PrivateAccessor.getTimerTicksPerSecond(defaultTimer);
 		}
 
 		float fps = cfg.frameRate.get().floatValue();
@@ -56,20 +56,20 @@ public class TimerModifier extends CaptureModule implements PrivateAccessor {
 
 		// set fixed delay timer
 		timer = new FixedTimer(defaultTps, fps, speed);
-		minecraftSetTimer(MC, timer);
+		PrivateAccessor.setMinecraftTimer(MC, timer);
 	}
 
 	@Override
 	protected void doDisable() {
 		// check if it's still modified
-		if (!(minecraftGetTimer(MC) instanceof FixedTimer)) {
+		if (!(PrivateAccessor.getMinecraftTimer(MC) instanceof FixedTimer)) {
 			L.warn("Timer is already restored!");
 			return;
 		}
 
 		// restore default timer
 		timer = null;
-		minecraftSetTimer(MC, new Timer(defaultTps));
+		PrivateAccessor.setMinecraftTimer(MC, new Timer(defaultTps));
 	}
 
 	/**
