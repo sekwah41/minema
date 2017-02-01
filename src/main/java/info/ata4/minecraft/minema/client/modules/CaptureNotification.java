@@ -10,7 +10,6 @@
 package info.ata4.minecraft.minema.client.modules;
 
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 
@@ -19,30 +18,27 @@ import net.minecraft.util.SoundCategory;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class CaptureNotification extends CaptureModule {
-    
-    private static final Minecraft MC = Minecraft.getMinecraft();
 
-    public CaptureNotification(MinemaConfig cfg) {
-        super(cfg);
-    }
+	public CaptureNotification(MinemaConfig cfg) {
+		super(cfg);
+	}
 
-    @Override
-    protected void doEnable() throws Exception {
-        playChickenPlop(true);
-    }
+	@Override
+	protected void doEnable() throws Exception {
+		playChickenPlop(1);
+	}
 
-    @Override
-    protected void doDisable() throws Exception {
-        playChickenPlop(false);
-    }
+	@Override
+	protected void doDisable() throws Exception {
+		playChickenPlop(0.75f);
+	}
 
-    private void playChickenPlop(boolean on) {
-        try {
-            float pitch = on ? 1 : 0.75f;
-            MC.world.playSound(MC.player, MC.player.getPosition(),
-                SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, 1, pitch);
-        } catch (Exception ex) {
-            handleWarning(ex, "Can't play chicken plop");
-        }
-    }
+	private void playChickenPlop(float pitch) {
+		try {
+			MC.world.playSound(MC.player, MC.player.getPosition(), SoundEvents.ENTITY_CHICKEN_EGG,
+					SoundCategory.NEUTRAL, 1, pitch);
+		} catch (Exception ex) {
+			handleWarning(ex, "Cannot play chicken plop");
+		}
+	}
 }

@@ -9,14 +9,10 @@
  */
 package info.ata4.minecraft.minema.client.modules.modifiers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import info.ata4.minecraft.minema.client.engine.FixedTimer;
 import info.ata4.minecraft.minema.client.modules.CaptureModule;
 import info.ata4.minecraft.minema.util.reflection.PrivateAccessor;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.Timer;
 
 /**
@@ -24,9 +20,6 @@ import net.minecraft.util.Timer;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class TimerModifier extends CaptureModule {
-
-	private static final Logger L = LogManager.getLogger();
-	private static final Minecraft MC = Minecraft.getMinecraft();
 
 	private static FixedTimer timer = null;
 

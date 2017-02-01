@@ -9,14 +9,14 @@
  */
 package info.ata4.minecraft.minema.client.modules;
 
-import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import net.minecraft.client.Minecraft;
+
+import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -25,8 +25,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Tick synchronizer that virtually works like the escapement device of a clock
@@ -36,9 +34,6 @@ import org.apache.logging.log4j.Logger;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class TickSynchronizer extends CaptureModule {
-
-    private static final Logger L = LogManager.getLogger();
-    private static final Minecraft MC = Minecraft.getMinecraft();
 
     // wait time in nanoseconds before the lock release condition is re-checked
     private static final long WAIT_INTERVAL = TimeUnit.SECONDS.toNanos(1);

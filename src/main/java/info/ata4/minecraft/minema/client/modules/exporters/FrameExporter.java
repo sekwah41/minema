@@ -9,26 +9,23 @@
  */
 package info.ata4.minecraft.minema.client.modules.exporters;
 
-import info.ata4.minecraft.minema.client.config.MinemaConfig;
-import info.ata4.minecraft.minema.client.event.FrameExportEvent;
-import info.ata4.minecraft.minema.client.event.FrameImportEvent;
-import info.ata4.minecraft.minema.client.modules.CaptureModule;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+
+import info.ata4.minecraft.minema.client.config.MinemaConfig;
+import info.ata4.minecraft.minema.client.event.FrameExportEvent;
+import info.ata4.minecraft.minema.client.event.FrameImportEvent;
+import info.ata4.minecraft.minema.client.modules.CaptureModule;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public abstract class FrameExporter extends CaptureModule {
-
-    private static final Logger L = LogManager.getLogger();
 
     protected ExecutorService exportService;
     protected Future<?> exportFuture;

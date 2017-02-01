@@ -1,15 +1,13 @@
 package info.ata4.minecraft.minema.client.modules.modifiers;
 
-import info.ata4.minecraft.minema.client.config.MinemaConfig;
-import info.ata4.minecraft.minema.client.modules.CaptureModule;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.shader.Framebuffer;
 import org.lwjgl.opengl.Display;
 
-public class DisplaySizeModifier extends CaptureModule {
+import info.ata4.minecraft.minema.client.config.MinemaConfig;
+import info.ata4.minecraft.minema.client.modules.CaptureModule;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.shader.Framebuffer;
 
-    private static final Minecraft MC = Minecraft.getMinecraft();
+public class DisplaySizeModifier extends CaptureModule {
 
     private int originalWidth;
     private int originalHeight;

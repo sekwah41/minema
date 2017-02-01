@@ -32,7 +32,6 @@ import info.ata4.minecraft.minema.client.modules.modifiers.TimerModifier;
 import info.ata4.minecraft.minema.client.util.CaptureFrame;
 import info.ata4.minecraft.minema.client.util.CaptureTime;
 import info.ata4.minecraft.minema.client.util.ChatUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -79,7 +78,7 @@ public class CaptureSession extends CaptureModule {
 		modules.add(new GameSettingsModifier(cfg));
 
 		if (cfg.syncEngine.get()) {
-			if (Minecraft.getMinecraft().isSingleplayer()) {
+			if (MC.isSingleplayer()) {
 				modules.add(new TimerModifier(cfg));
 				modules.add(new TickSynchronizer(cfg));
 			} else {
@@ -90,7 +89,7 @@ public class CaptureSession extends CaptureModule {
 		}
 
 		if (cfg.preloadChunks.get()) {
-			if (!Minecraft.getMinecraft().isSingleplayer()) {
+			if (!MC.isSingleplayer()) {
 				ChatUtils.print("Warning!", TextFormatting.YELLOW);
 				ChatUtils.print(
 						"Instant chunk loading should be used on a local world! Only then it will be truly effective!",

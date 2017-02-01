@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
 import net.minecraft.client.renderer.chunk.RenderChunk;
@@ -28,8 +27,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class ChunkPreloader extends CaptureModule {
-
-	private static final Minecraft MC = Minecraft.getMinecraft();
 
 	private Field renderInfosField;
 	private Field renderDispatcherField;

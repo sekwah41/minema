@@ -9,10 +9,12 @@
  */
 package info.ata4.minecraft.minema.client.modules;
 
-import info.ata4.minecraft.minema.Minema;
-import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import info.ata4.minecraft.minema.Minema;
+import info.ata4.minecraft.minema.client.config.MinemaConfig;
+import net.minecraft.client.Minecraft;
 
 /**
  *
@@ -20,69 +22,70 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class CaptureModule {
 
-    private static final Logger L = LogManager.getLogger();
+	protected static final Minecraft MC = Minecraft.getMinecraft();
+	protected static final Logger L = LogManager.getLogger();
 
-    protected final MinemaConfig cfg;
-    private boolean enabled;
+	protected final MinemaConfig cfg;
+	private boolean enabled;
 
-    public CaptureModule(MinemaConfig cfg) {
-        this.cfg = cfg;
-    }
+	public CaptureModule(MinemaConfig cfg) {
+		this.cfg = cfg;
+	}
 
-    public String getName() {
-        return getClass().getSimpleName();
-    }
+	public String getName() {
+		return getClass().getSimpleName();
+	}
 
-    public synchronized final boolean isEnabled() {
-        return enabled;
-    }
+	public synchronized final boolean isEnabled() {
+		return enabled;
+	}
 
-    public synchronized final void enable() {
-        if (enabled) {
-            return;
-        }
+	public synchronized final void enable() {
+		if (enabled) {
+			return;
+		}
 
-        enabled = true;
+		enabled = true;
 
-        L.info("Enabling " + getName());
-        
-        Minema.EVENT_BUS.register(this);
+		L.info("Enabling " + getName());
 
-        try {
-            doEnable();
-        } catch (Exception ex) {
-            handleError(ex, "Can't enable %s", getName());
-            disable();
-        }
-    }
+		Minema.EVENT_BUS.register(this);
 
-    public synchronized final void disable() {
-        if (!enabled) {
-            return;
-        }
+		try {
+			doEnable();
+		} catch (Exception ex) {
+			handleError(ex, "Cannot enable %s", getName());
+			disable();
+		}
+	}
 
-        enabled = false;
+	public synchronized final void disable() {
+		if (!enabled) {
+			return;
+		}
 
-        L.info("Disabling " + getName());
-        
-        Minema.EVENT_BUS.unregister(this);
+		enabled = false;
 
-        try {
-            doDisable();
-        } catch (Exception ex) {
-            handleError(ex, "Can't disable %s", getName());
-        }
-    }
-    
-    protected void handleWarning(Throwable t, String message, Object... args) {
-        L.warn(String.format(message, args), t);
-    }
+		L.info("Disabling " + getName());
 
-    protected void handleError(Throwable t, String message, Object... args) {
-        throw new RuntimeException(String.format(message, args), t);
-    }
+		Minema.EVENT_BUS.unregister(this);
 
-    protected abstract void doEnable() throws Exception;
+		try {
+			doDisable();
+		} catch (Exception ex) {
+			handleError(ex, "Cannot disable %s", getName());
+		}
+	}
 
-    protected abstract void doDisable() throws Exception;
+	protected void handleWarning(Throwable t, String message, Object... args) {
+		L.warn(String.format(message, args), t);
+	}
+
+	protected void handleError(Throwable t, String message, Object... args) {
+		throw new RuntimeException(String.format(message, args), t);
+	}
+
+	protected abstract void doEnable() throws Exception;
+
+	protected abstract void doDisable() throws Exception;
 }

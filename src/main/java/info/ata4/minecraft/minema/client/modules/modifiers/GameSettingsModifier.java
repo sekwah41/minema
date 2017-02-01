@@ -11,7 +11,6 @@ package info.ata4.minecraft.minema.client.modules.modifiers;
 
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import info.ata4.minecraft.minema.client.modules.CaptureModule;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 
 /**
@@ -19,8 +18,6 @@ import net.minecraft.client.settings.GameSettings;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class GameSettingsModifier extends CaptureModule {
-
-    private static final Minecraft MC = Minecraft.getMinecraft();
 
     private int framerateLimit;
     private boolean vSync;

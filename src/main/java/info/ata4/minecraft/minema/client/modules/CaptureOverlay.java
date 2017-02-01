@@ -25,8 +25,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class CaptureOverlay extends CaptureModule {
 
-    private static final Minecraft MC = Minecraft.getMinecraft();
-
     private CaptureTime time;
 
     public CaptureOverlay(MinemaConfig cfg) {
