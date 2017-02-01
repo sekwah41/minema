@@ -1,12 +1,3 @@
-/*
- ** 2014 August 03
- **
- ** The author disclaims copyright to this source code.  In place of
- ** a legal notice, here is a blessing:
- **    May you do good and not evil.
- **    May you find forgiveness for yourself and forgive others.
- **    May you share freely, never taking more than you give.
- */
 package info.ata4.minecraft.minema.client.modules;
 
 import java.lang.reflect.Field;
@@ -22,10 +13,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
-/**
- *
- * @author Nico Bergemann <barracuda415 at yahoo.de>
- */
 public class ChunkPreloader extends CaptureModule {
 
 	private Field renderInfosField;
