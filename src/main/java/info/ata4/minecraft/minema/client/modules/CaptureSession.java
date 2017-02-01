@@ -9,6 +9,14 @@
  */
 package info.ata4.minecraft.minema.client.modules;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import info.ata4.minecraft.minema.Minema;
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import info.ata4.minecraft.minema.client.event.FrameEvent;
@@ -24,13 +32,6 @@ import info.ata4.minecraft.minema.client.modules.modifiers.TimerModifier;
 import info.ata4.minecraft.minema.client.util.CaptureFrame;
 import info.ata4.minecraft.minema.client.util.CaptureTime;
 import info.ata4.minecraft.minema.client.util.ChatUtils;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -44,145 +45,161 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
  */
 public class CaptureSession extends CaptureModule {
 
-    public static Minecraft MC = Minecraft.getMinecraft();
+	private final ArrayList<CaptureModule> modules = new ArrayList<>();
 
-    private final ArrayList<CaptureModule> modules = new ArrayList<>();
+	private Path captureDir;
+	private String movieName;
 
-    private Path movieDir;
-    private CaptureTime time;
-    private CaptureFrame frame;
-    private int frameLimit;
+	private CaptureTime time;
+	private CaptureFrame frame;
+	private int frameLimit;
 
-    public CaptureSession(MinemaConfig cfg) {
-        super(cfg);
-    }
+	public CaptureSession(MinemaConfig cfg) {
+		super(cfg);
+	}
 
-    @Override
-    protected void doEnable() throws Exception {
-        // create and set movie dir
-        Path captureDir = Paths.get(cfg.capturePath.get());
-        String movieName = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date());
-        movieDir = captureDir.resolve(movieName);
+	@Override
+	protected void doEnable() throws Exception {
+		captureDir = Paths.get(cfg.capturePath.get());
+		if (!Files.exists(captureDir)) {
+			Files.createDirectories(captureDir);
+		}
+		movieName = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date());
 
-        if (!Files.exists(movieDir)) {
-            Files.createDirectories(movieDir);
-        }
+		if (!cfg.useVideoEncoder.get()) {
+			Path movieDir = captureDir.resolve(movieName);
+			if (!Files.exists(movieDir)) {
+				Files.createDirectory(movieDir);
+			}
+		}
 
-        frameLimit = cfg.frameLimit.get();
+		frameLimit = cfg.frameLimit.get();
 
-        // init modules
-        modules.add(new GameSettingsModifier(cfg));
+		// init modules
+		modules.add(new GameSettingsModifier(cfg));
 
-        if (cfg.isSyncEngine()) {
-        	if (Minecraft.getMinecraft().isSingleplayer()) {
-                modules.add(new TimerModifier(cfg));
-                modules.add(new TickSynchronizer(cfg));
-        	} else {
-        		ChatUtils.print("WARNING!!!", TextFormatting.RED);
-        		ChatUtils.print("Tick sync and shader sync is NOT going to work! Always record in a local world!", TextFormatting.RED);
-        	}
-        }
+		if (cfg.syncEngine.get()) {
+			if (Minecraft.getMinecraft().isSingleplayer()) {
+				modules.add(new TimerModifier(cfg));
+				modules.add(new TickSynchronizer(cfg));
+			} else {
+				ChatUtils.print("WARNING!!!", TextFormatting.RED);
+				ChatUtils.print("Tick sync and shader sync is NOT going to work! Always record on a local world!",
+						TextFormatting.RED);
+			}
+		}
 
-        if (cfg.useFrameSize()) {
-            modules.add(new DisplaySizeModifier(cfg));
-        }
+		if (cfg.preloadChunks.get()) {
+			if (!Minecraft.getMinecraft().isSingleplayer()) {
+				ChatUtils.print("Warning!", TextFormatting.YELLOW);
+				ChatUtils.print(
+						"Instant chunk loading should be used on a local world! Only then it will be truly effective!",
+						TextFormatting.YELLOW);
+			}
 
-        modules.add(new FrameImporter(cfg));
+			modules.add(new ChunkPreloader(cfg));
+		}
 
-        FrameExporter exporter;
-        if (cfg.useVideoEncoder.get()) {
-            exporter = new PipeFrameExporter(cfg);
-        } else {
-            exporter = new ImageFrameExporter(cfg);
-        }
-        modules.add(exporter);
+		if (cfg.useFrameSize()) {
+			modules.add(new DisplaySizeModifier(cfg));
+		}
 
-        if (cfg.showOverlay.get()) {
-            modules.add(new CaptureOverlay(cfg));
-        }
-        
-        modules.add(new CaptureNotification(cfg));
+		modules.add(new FrameImporter(cfg));
 
-        // enable and register modules
-        modules.forEach(CaptureModule::enable);
-        
-        MinecraftForge.EVENT_BUS.register(this);
-        
-        // reset capturing state
-        time = new CaptureTime(cfg.frameRate.get());
-        frame = new CaptureFrame();
+		FrameExporter exporter;
+		if (cfg.useVideoEncoder.get()) {
+			exporter = new PipeFrameExporter(cfg);
+		} else {
+			exporter = new ImageFrameExporter(cfg);
+		}
+		modules.add(exporter);
 
-        postFrameEvent(new FrameInitEvent(frame, time, movieDir));
-    }
+		if (cfg.showOverlay.get()) {
+			modules.add(new CaptureOverlay(cfg));
+		}
 
-    @Override
-    protected void doDisable() {
-        // disable and unregister modules
-        modules.forEach(CaptureModule::disable);
-        modules.clear();
-        
-        MinecraftForge.EVENT_BUS.unregister(this);
-    }
+		modules.add(new CaptureNotification(cfg));
 
-    @Override
-    protected void handleError(Throwable throwable, String message, Object... args) {
-        ChatUtils.print("minema.error.label", TextFormatting.RED);
+		// enable and register modules
+		modules.forEach(CaptureModule::enable);
 
-        // get list of throwables and their causes
-        List<Throwable> throwables = new ArrayList<>();
-        do {
-            throwables.add(throwable);
-            throwable = throwable.getCause();
-        } while (throwable != null);
+		MinecraftForge.EVENT_BUS.register(this);
 
-        throwables.stream().filter(t -> {
-            String msg = t.getMessage();
+		// reset capturing state
+		time = new CaptureTime(cfg.frameRate.get());
+		frame = new CaptureFrame();
 
-            // skip wrapped exceptions
-            if (msg == null) {
-                return false;
-            }
+		postFrameEvent(new FrameInitEvent(frame, time, captureDir, movieName));
+	}
 
-            // skip wrapped exceptions with generated messages
-            Throwable cause = t.getCause();
-            return cause == null || !msg.equals(cause.toString());
-        }).forEach(t -> ChatUtils.print(t.getMessage(), TextFormatting.RED));
-    }
+	@Override
+	protected void doDisable() {
+		// disable and unregister modules
+		modules.forEach(CaptureModule::disable);
+		modules.clear();
 
-    @SubscribeEvent
-    public void onRenderTick(RenderTickEvent e) {
-        if (!isEnabled()) {
-            return;
-        }
+		MinecraftForge.EVENT_BUS.unregister(this);
+	}
 
-        // only record at the end of the frame
-        if (e.phase == Phase.START) {
-            return;
-        }
+	@Override
+	protected void handleError(Throwable throwable, String message, Object... args) {
+		ChatUtils.print("minema.error.label", TextFormatting.RED);
 
-        // stop at frame limit
-        if (frameLimit > 0 && time.getNumFrames() >= frameLimit) {
-            disable();
-        }
+		// get list of throwables and their causes
+		List<Throwable> throwables = new ArrayList<>();
+		do {
+			throwables.add(throwable);
+			throwable = throwable.getCause();
+		} while (throwable != null);
 
-        // skip frames if the capturing framerate is not synchronized with the
-        // rendering framerate
-        if (!cfg.isSyncEngine() && !time.isNextFrame()) {
-            // Game renders faster than necessary for recording?
-            return;
-        }
+		throwables.stream().filter(t -> {
+			String msg = t.getMessage();
 
-        postFrameEvent(new FrameImportEvent(frame, time, movieDir));
-    }
+			// skip wrapped exceptions
+			if (msg == null) {
+				return false;
+			}
 
-    private <T extends FrameEvent> void postFrameEvent(T evt) {
-        try {
-            if (Minema.EVENT_BUS.post(evt)) {
-                throw new RuntimeException("Frame capturing cancelled at frame " + time.getNumFrames());
-            }
-        } catch (Exception ex) {
-            handleError(ex, "Frame capturing error");
-            disable();
-        }
-    }
+			// skip wrapped exceptions with generated messages
+			Throwable cause = t.getCause();
+			return cause == null || !msg.equals(cause.toString());
+		}).forEach(t -> ChatUtils.print(t.getMessage(), TextFormatting.RED));
+	}
+
+	@SubscribeEvent
+	public void onRenderTick(RenderTickEvent e) {
+		if (!isEnabled()) {
+			return;
+		}
+
+		// only record at the end of the frame
+		if (e.phase == Phase.START) {
+			return;
+		}
+
+		// stop at frame limit
+		if (frameLimit > 0 && time.getNumFrames() >= frameLimit) {
+			disable();
+		}
+
+		// skip frames if the capturing framerate is not synchronized with the
+		// rendering framerate
+		if (!cfg.syncEngine.get() && !time.isNextFrame()) {
+			// Game renders faster than necessary for recording?
+			return;
+		}
+
+		postFrameEvent(new FrameImportEvent(frame, time, captureDir, movieName));
+	}
+
+	private <T extends FrameEvent> void postFrameEvent(T evt) {
+		try {
+			if (Minema.EVENT_BUS.post(evt)) {
+				throw new RuntimeException("Frame capturing cancelled at frame " + time.getNumFrames());
+			}
+		} catch (Exception ex) {
+			handleError(ex, "Frame capturing error");
+			disable();
+		}
+	}
 }

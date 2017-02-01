@@ -46,7 +46,7 @@ public class MinemaConfig {
 	public final ConfigBoolean useVideoEncoder = new ConfigBoolean(true);
 	public final ConfigString videoEncoderPath = new ConfigString("ffmpeg");
 	public final ConfigString videoEncoderParams = new ConfigString(
-			"-f rawvideo -pix_fmt bgr24 -s %WIDTH%x%HEIGHT% -r %FPS% -i - -vf vflip -c:v libx264 -preset ultrafast -tune zerolatency -qp 18 -pix_fmt yuv420p video.mp4");
+			"-f rawvideo -pix_fmt bgr24 -s %WIDTH%x%HEIGHT% -r %FPS% -i - -vf vflip -c:v libx264 -preset ultrafast -tune zerolatency -qp 18 -pix_fmt yuv420p %NAME%.mp4");
 	public final ConfigEnum<SnapResolution> snapResolution = new ConfigEnum<>(SnapResolution.MOD2);
 
 	public final ConfigInteger frameWidth = new ConfigInteger(0, 0, MAX_TEXTURE_SIZE);
@@ -59,6 +59,7 @@ public class MinemaConfig {
 
 	public final ConfigDouble engineSpeed = new ConfigDouble(1.0, 0.01, 100.0);
 	public final ConfigBoolean syncEngine = new ConfigBoolean(true);
+	public final ConfigBoolean preloadChunks = new ConfigBoolean(true);
 
 	public MinemaConfig(Configuration cfg) {
 		this.configForge = cfg;
@@ -90,6 +91,7 @@ public class MinemaConfig {
 
 		engineSpeed.link(cfg, ENGINE_CATEGORY, "engineSpeed", LANG_KEY);
 		syncEngine.link(cfg, ENGINE_CATEGORY, "syncEngine", LANG_KEY);
+		preloadChunks.link(cfg, ENGINE_CATEGORY, "preloadChunks", LANG_KEY);
 	}
 
 	public Configuration getConfigForge() {
@@ -137,7 +139,4 @@ public class MinemaConfig {
 		return getFrameWidth() != Display.getWidth() || getFrameHeight() != Display.getHeight();
 	}
 
-	public boolean isSyncEngine() {
-		return syncEngine.get();
-	}
 }

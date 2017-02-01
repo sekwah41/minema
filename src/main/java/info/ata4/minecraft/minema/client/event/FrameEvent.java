@@ -9,9 +9,10 @@
  */
 package info.ata4.minecraft.minema.client.event;
 
+import java.nio.file.Path;
+
 import info.ata4.minecraft.minema.client.util.CaptureFrame;
 import info.ata4.minecraft.minema.client.util.CaptureTime;
-import java.nio.file.Path;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -20,15 +21,19 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 @Cancelable
-public abstract class FrameEvent extends Event  {
+public abstract class FrameEvent extends Event {
 
-    public final CaptureFrame frame;
-    public final CaptureTime time;
-    public final Path movieDir;
+	public final CaptureFrame frame;
+	public final CaptureTime time;
 
-    public FrameEvent(CaptureFrame frame, CaptureTime time, Path movieDir) {
-        this.frame = frame;
-        this.time = time;
-        this.movieDir = movieDir;
-    }
+	public final Path captureDir;
+	public final String movieName;
+
+	public FrameEvent(CaptureFrame frame, CaptureTime time, Path captureDir, String movieName) {
+		this.frame = frame;
+		this.time = time;
+		this.captureDir = captureDir;
+		this.movieName = movieName;
+	}
+
 }

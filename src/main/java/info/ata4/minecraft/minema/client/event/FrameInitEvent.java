@@ -9,18 +9,19 @@
  */
 package info.ata4.minecraft.minema.client.event;
 
+import java.nio.file.Path;
+
 import info.ata4.minecraft.minema.client.util.CaptureFrame;
 import info.ata4.minecraft.minema.client.util.CaptureTime;
-import java.nio.file.Path;
 
 /**
  *
  * @author Nico Bergemann <barracuda415 at yahoo.de>
  */
 public class FrameInitEvent extends FrameEvent {
-    
-    public FrameInitEvent(CaptureFrame frame, CaptureTime time, Path movieDir) {
-        super(frame, time, movieDir);
-    }
+
+	public FrameInitEvent(CaptureFrame frame, CaptureTime time, Path captureDir, String movieName) {
+		super(frame, time, captureDir, movieName);
+	}
 
 }

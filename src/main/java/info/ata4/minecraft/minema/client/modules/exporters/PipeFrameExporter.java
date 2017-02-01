@@ -9,9 +9,6 @@
  */
 package info.ata4.minecraft.minema.client.modules.exporters;
 
-import info.ata4.minecraft.minema.client.config.MinemaConfig;
-import info.ata4.minecraft.minema.client.event.FrameExportEvent;
-import info.ata4.minecraft.minema.client.event.FrameInitEvent;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,8 +19,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
 import org.apache.commons.lang3.StringUtils;
+
+import info.ata4.minecraft.minema.client.config.MinemaConfig;
+import info.ata4.minecraft.minema.client.event.FrameExportEvent;
+import info.ata4.minecraft.minema.client.event.FrameInitEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  *
@@ -31,74 +33,77 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class PipeFrameExporter extends FrameExporter {
 
-    private Process proc;
-    private WritableByteChannel pipe;
+	private Process proc;
+	private WritableByteChannel pipe;
 
-    public PipeFrameExporter(MinemaConfig cfg) {
-        super(cfg);
-    }
+	public PipeFrameExporter(MinemaConfig cfg) {
+		super(cfg);
+	}
 
-    @SubscribeEvent
-    public void onFrameInit(FrameInitEvent e) {
-        try {
-            String params = cfg.videoEncoderParams.get();
-            params = params.replace("%WIDTH%", String.valueOf(e.frame.width));
-            params = params.replace("%HEIGHT%", String.valueOf(e.frame.height));
-            params = params.replace("%FPS%", String.valueOf(cfg.frameRate.get()));
+	@SubscribeEvent
+	public void onFrameInit(FrameInitEvent e) {
+		try {
+			String params = cfg.videoEncoderParams.get();
+			params = params.replace("%WIDTH%", String.valueOf(e.frame.width));
+			params = params.replace("%HEIGHT%", String.valueOf(e.frame.height));
+			params = params.replace("%FPS%", String.valueOf(cfg.frameRate.get()));
+			params = params.replace("%NAME%", e.movieName);
 
-            List<String> cmds = new ArrayList<>();
-            cmds.add(cfg.videoEncoderPath.get());
-            cmds.addAll(Arrays.asList(StringUtils.split(params, ' ')));
+			List<String> cmds = new ArrayList<>();
+			cmds.add(cfg.videoEncoderPath.get());
+			cmds.addAll(Arrays.asList(StringUtils.split(params, ' ')));
 
-            // build encoder process and redirect output
-            ProcessBuilder pb = new ProcessBuilder(cmds);
-            pb.directory(e.movieDir.toFile());
-            pb.redirectErrorStream(true);
-            pb.redirectOutput(e.movieDir.resolve("encoder.log").toFile());
-            proc = pb.start();
+			// build encoder process and redirect output
+			ProcessBuilder pb = new ProcessBuilder(cmds);
+			pb.directory(e.captureDir.toFile());
+			pb.redirectErrorStream(true);
+			pb.redirectOutput(e.captureDir.resolve(e.movieName.concat(".log")).toFile());
+			proc = pb.start();
 
-            // Java wraps the process output stream into a BufferedOutputStream,
-            // but its little buffer is just slowing everything down with the huge
-            // amount of data we're dealing here, so unwrap it with this little hack.
-            OutputStream os = proc.getOutputStream();
-            if (os instanceof FilterOutputStream) {
-                Field outField = FilterOutputStream.class.getDeclaredField("out");
-                outField.setAccessible(true);
-                os = (OutputStream) outField.get(os);
-            }
+			// Java wraps the process output stream into a BufferedOutputStream,
+			// but its little buffer is just slowing everything down with the
+			// huge
+			// amount of data we're dealing here, so unwrap it with this little
+			// hack.
+			OutputStream os = proc.getOutputStream();
+			if (os instanceof FilterOutputStream) {
+				Field outField = FilterOutputStream.class.getDeclaredField("out");
+				outField.setAccessible(true);
+				os = (OutputStream) outField.get(os);
+			}
 
-            pipe = Channels.newChannel(os);
-        } catch (Exception ex) {
-            handleError(ex, "Can't start encoder");
-        }
-    }
+			pipe = Channels.newChannel(os);
+		} catch (Exception ex) {
+			handleError(ex, "Can't start encoder");
+		}
+	}
 
-    @Override
-    protected void doDisable() throws Exception {
-        super.doDisable();
+	@Override
+	protected void doDisable() throws Exception {
+		super.doDisable();
 
-        try {
-            if (pipe.isOpen()) {
-                pipe.close();
-            }
-        } catch (IOException ex) {
-            handleWarning(ex, "Pipe not closed properly");
-        }
+		try {
+			if (pipe.isOpen()) {
+				pipe.close();
+			}
+		} catch (IOException ex) {
+			handleWarning(ex, "Pipe not closed properly");
+		}
 
-        try {
-            if (proc != null) {
-                proc.waitFor(1, TimeUnit.MINUTES);
-                proc.destroy();
-            }
-        } catch (InterruptedException ex) {
-            handleWarning(ex, "Pipe program termination interrupted");
-        }
-    }
+		try {
+			if (proc != null) {
+				proc.waitFor(1, TimeUnit.MINUTES);
+				proc.destroy();
+			}
+		} catch (InterruptedException ex) {
+			handleWarning(ex, "Pipe program termination interrupted");
+		}
+	}
 
-    @Override
-    protected void doExportFrame(FrameExportEvent evt) throws Exception {
-        if (pipe.isOpen()) {
-            pipe.write(evt.frame.buffer);
-        }
-    }
+	@Override
+	protected void doExportFrame(FrameExportEvent evt) throws Exception {
+		if (pipe.isOpen()) {
+			pipe.write(evt.frame.buffer);
+		}
+	}
 }
