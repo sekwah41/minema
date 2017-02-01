@@ -192,7 +192,7 @@ public class CaptureSession extends CaptureModule {
 		postFrameEvent(new FrameImportEvent(frame, time, captureDir, movieName));
 	}
 
-	private <T extends FrameEvent> void postFrameEvent(T evt) {
+	private void postFrameEvent(FrameEvent evt) {
 		try {
 			if (Minema.EVENT_BUS.post(evt)) {
 				throw new RuntimeException("Frame capturing cancelled at frame " + time.getNumFrames());
