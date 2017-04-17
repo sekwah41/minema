@@ -62,3 +62,6 @@ minema.config.syncEngine.tooltip=If enabled, the local server and client runs sy
 
 minema.config.preloadChunks=Preload Chunks
 minema.config.preloadChunks.tooltip=If enabled, Minema will heavily accelerate the chunk loading rate during recording. THIS IS ONLY TRULY EFFECTIVE ON LOCAL WORLDS!
+
+minema.config.forcePreloadChunks=Force preload chunks
+minema.config.forcePreloadChunks.tooltip=If Preload Chunks is enabled and this is also enabled, all chunks in render distance will be preloaded. THIS IS ONLY TRULY EFFECTIVE ON LOCAL WORLDS!
