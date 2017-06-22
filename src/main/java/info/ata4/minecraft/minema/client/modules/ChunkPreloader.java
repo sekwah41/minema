@@ -44,7 +44,7 @@ public class ChunkPreloader extends CaptureModule {
 				Object renderInfo = iterator.next();
 				RenderChunk rc = (RenderChunk) renderChunkField.get(renderInfo);
 
-				if (rc.isNeedsUpdate()) {
+				if (rc.needsUpdate()) {
 					renderDispatcher.updateChunkNow(rc);
 					rc.clearNeedsUpdate();
 				}
@@ -84,9 +84,9 @@ public class ChunkPreloader extends CaptureModule {
 						chunks.updateChunkNow(chunk);
 					}
 				}
-			}
-			catch (Exception e) {
-				handleWarning(e, "Could not preload all chunks in render distance on enable, disable the config option and report the error!");
+			} catch (Exception e) {
+				handleWarning(e,
+						"Could not preload all chunks in render distance on enable, disable the config option and report the error!");
 			}
 		}
 

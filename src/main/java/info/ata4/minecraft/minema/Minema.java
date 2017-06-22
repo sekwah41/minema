@@ -36,7 +36,7 @@ public class Minema {
 	 * this has to be a constant expression
 	 */
 	public static final String ID = "minema";
-	public static final String VERSION = "1.11.2";
+	public static final String VERSION = "1.12";
 
 	private static final String category = "key.categories.minema";
 	private static final KeyBinding KEY_CAPTURE = new KeyBinding("key.minema.capture", Keyboard.KEY_F4, category);
