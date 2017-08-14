@@ -26,22 +26,8 @@ public class MinemaConfigGuiFactory implements IModGuiFactory {
 	}
 
 	@Override
-	public Class<MinemaConfigGui> mainConfigGuiClass() {
-		// should be removed too...
-		return MinemaConfigGui.class;
-	}
-
-	@Override
 	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
 		// unused/unimplemented by Forge at time this was written
-		return null;
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
-		// unused/unimplemented by Forge at time this was written
-		// should be removed too...
 		return null;
 	}
 

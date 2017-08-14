@@ -17,12 +17,12 @@ public final class ShaderHookInjector implements IClassTransformer {
 	// All obfuscated/deobfuscated mappings can be found in the .gradle
 	// directory (usually inside user directory) in
 	// .gradle\caches\minecraft\de\oceanlabs\mcp\mcp_snapshot\XXXXXXXX\X.XX\srgs\mcp-notch.srg:
-	// Mappings for all classes, methods and fields
-	// Do not use methods.csv etc. because those might not be true (Why? Good
-	// question)
+	// MCP Mappings for all classes, methods and fields
+	// Do not use methods.csv etc. because those are the Forge mappings (which
+	// is only relevant for runtime reflection)
 
 	private static final String deobfuscatedClass = "net.minecraft.client.renderer.EntityRenderer";
-	// private static final String obfuscatedClass = "buo";
+	// private static final String obfuscatedClass = "buq";
 
 	private static final String deobfuscatedMethod = "renderWorld";
 	private static final String obfuscatedMethod = "b";
@@ -51,7 +51,7 @@ public final class ShaderHookInjector implements IClassTransformer {
 					// the initialization of frameTimeCounter
 
 					String calledClass = isInAlreadyDeobfuscatedState ? "net/minecraft/client/renderer/GlStateManager"
-							: "buq";
+							: "bus";
 					String calledMethod = isInAlreadyDeobfuscatedState ? "enableDepth" : "k";
 
 					// find it (insert and insertBefore do not work because

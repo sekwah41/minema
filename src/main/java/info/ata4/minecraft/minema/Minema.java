@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
  * 
  * @author Gregosteros (minecraftforum) / daipenger (github)
  */
-@Mod(modid = Minema.ID, name = Minema.NAME, version = Minema.VERSION, guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
+@Mod(modid = Minema.ID, name = Minema.NAME, clientSideOnly = true, acceptedMinecraftVersions = Minema.MCVERSION, version = "3.3.1", guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
 public class Minema {
 
 	public static final String NAME = "Minema";
@@ -36,7 +36,8 @@ public class Minema {
 	 * this has to be a constant expression
 	 */
 	public static final String ID = "minema";
-	public static final String VERSION = "1.12";
+
+	public static final String MCVERSION = "1.12.1";
 
 	private static final String category = "key.categories.minema";
 	private static final KeyBinding KEY_CAPTURE = new KeyBinding("key.minema.capture", Keyboard.KEY_F4, category);
