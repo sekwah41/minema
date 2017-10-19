@@ -37,7 +37,7 @@ public class Minema {
 	 */
 	public static final String ID = "minema";
 
-	public static final String MCVERSION = "1.12.1";
+	public static final String MCVERSION = "1.12.2";
 
 	private static final String category = "key.categories.minema";
 	private static final KeyBinding KEY_CAPTURE = new KeyBinding("key.minema.capture", Keyboard.KEY_F4, category);
