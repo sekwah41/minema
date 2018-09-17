@@ -68,15 +68,4 @@ public class TimerModifier extends CaptureModule {
 		PrivateAccessor.setMinecraftTimer(MC, new Timer(defaultTps));
 	}
 
-	/**
-	 * CALLED BY ASM INJECTED CODE! (COREMOD) DO NOT MODIFY METHOD SIGNATURE!
-	 */
-	public static void setFrameTimeCounter() {
-		// This spot is right here because I can choose to only synchronize when
-		// recording right here
-		if (timer == null)
-			return;
-		timer.setFrameTimeCounter();
-	}
-
 }

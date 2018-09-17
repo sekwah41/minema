@@ -12,6 +12,7 @@ import info.ata4.minecraft.minema.client.modules.CaptureModule;
 import info.ata4.minecraft.minema.client.modules.CaptureNotification;
 import info.ata4.minecraft.minema.client.modules.CaptureOverlay;
 import info.ata4.minecraft.minema.client.modules.ChunkPreloader;
+import info.ata4.minecraft.minema.client.modules.ShaderSync;
 import info.ata4.minecraft.minema.client.modules.TickSynchronizer;
 import info.ata4.minecraft.minema.client.modules.modifiers.DisplaySizeModifier;
 import info.ata4.minecraft.minema.client.modules.modifiers.GameSettingsModifier;
@@ -29,9 +30,9 @@ public class CaptureSession {
 
 	public static final CaptureSession singleton = new CaptureSession();
 
-	private final CaptureModule[] modules = new CaptureModule[] { new GameSettingsModifier(), new TimerModifier(),
-			new TickSynchronizer(), new ChunkPreloader(), new DisplaySizeModifier(), new VideoHandler(),
-			new CaptureOverlay(), new CaptureNotification() };
+	private final CaptureModule[] modules = new CaptureModule[] { new GameSettingsModifier(), new ShaderSync(),
+			new TimerModifier(), new TickSynchronizer(), new ChunkPreloader(), new DisplaySizeModifier(),
+			new VideoHandler(), new CaptureOverlay(), new CaptureNotification() };
 
 	private Path captureDir;
 	private CaptureTime time;
@@ -58,15 +59,13 @@ public class CaptureSession {
 			}
 
 			if (cfg.syncEngine.get() & !MC.isSingleplayer()) {
-				Utils.print("WARNING!!!", TextFormatting.RED);
-				Utils.print("Tick sync and shader sync is NOT going to work! Always record on a local world!",
-						TextFormatting.RED);
+				Utils.print("WARNING!", TextFormatting.RED);
+				Utils.print("Tick sync is NOT going to work! Record in singleplayer!", TextFormatting.RED);
 			}
 
 			if (cfg.preloadChunks.get() & !MC.isSingleplayer()) {
 				Utils.print("Warning!", TextFormatting.YELLOW);
-				Utils.print(
-						"Instant chunk loading should be used on a local world! Only then it will be truly effective!",
+				Utils.print("Instant chunk loading should be used in singleplayer for its full effect!",
 						TextFormatting.YELLOW);
 			}
 

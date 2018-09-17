@@ -37,7 +37,6 @@ public class GameSettingsModifier extends CaptureModule {
 		// don't pause when losing focus
 		pauseOnLostFocus = gs.pauseOnLostFocus;
 		gs.pauseOnLostFocus = false;
-
 	}
 
 	@Override

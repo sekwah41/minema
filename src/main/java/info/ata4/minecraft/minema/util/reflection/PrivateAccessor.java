@@ -105,7 +105,7 @@ public final class PrivateAccessor {
 
 	private static void assureFrameTimeCounterField() {
 		if (Shaders_frameTimeCounter == null) {
-			Shaders_frameTimeCounter = getAccessibleField("shadersmod.client.Shaders", "frameTimeCounter");
+			Shaders_frameTimeCounter = getAccessibleField("net.optifine.shaders.Shaders", "frameTimeCounter");
 		}
 	}
 
