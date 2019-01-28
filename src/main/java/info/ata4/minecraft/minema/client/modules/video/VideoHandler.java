@@ -34,6 +34,7 @@ public class VideoHandler extends CaptureModule {
 	private String depthName;
 	private int startWidth;
 	private int startHeight;
+	private boolean recordGui;
 
 	@Override
 	protected void doEnable() throws Exception {
@@ -43,6 +44,7 @@ public class VideoHandler extends CaptureModule {
 		this.startHeight = MC.displayHeight;
 		this.colorName = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date());
 		this.depthName = colorName.concat("depthBuffer");
+		this.recordGui = cfg.recordGui.get();
 
 		boolean usePBO = GLContext.getCapabilities().GL_ARB_pixel_buffer_object;
 		boolean useFBO = OpenGlHelper.isFramebufferEnabled();
@@ -123,6 +125,19 @@ public class VideoHandler extends CaptureModule {
 
 			depthExport.exportFrame(depthRemapping);
 		}
+
+		if (!recordGui) {
+			exportColor();
+
+			e.session.getTime().nextFrame();
+		}
+	}
+
+	private void exportColor() throws Exception {
+		colorExport.waitForLastExport();
+		if (colorReader.readPixels()) {
+			colorExport.exportFrame(colorReader.buffer);
+		}
 	}
 
 	private float linearizeDepth(float z) {
@@ -134,12 +149,12 @@ public class VideoHandler extends CaptureModule {
 	private void onRenderEnd(EndRenderEvent e) throws Exception {
 		checkDimensions();
 
-		colorExport.waitForLastExport();
-		if (colorReader.readPixels()) {
-			colorExport.exportFrame(colorReader.buffer);
+		if (recordGui) {
+			exportColor();
+
+			e.session.getTime().nextFrame();
 		}
 
-		e.session.getTime().nextFrame();
 	}
 
 	private void checkDimensions() {
