@@ -37,4 +37,4 @@ For developers
 
 This setup uses [Gradle](https://gradle.org/) like any other Forge mod, so you should feel right at home.
 
-If you are totally new to Forge: In a nutshell you have to execute the task "gradle setupDecompWorkspace" first. But I always recommend just reading one of the starter tutorials.
+If you are totally new to Forge: In a nutshell you should execute the task "gradle setupDecompWorkspace" first in order to get decompiled minecraft code with Forge patches. But I always recommend just reading one of the starter tutorials.
