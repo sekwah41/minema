@@ -2,6 +2,7 @@ Minema
 ======
 
 A Minecraft mod for offline rendering and video capturing.
+
 [Demo video](https://www.youtube.com/watch?v=61XfHB9g6EQ):
 Butter smooth 1080p60, supersampled from 4K, up to 64 chunks render distance and up to 4096x4096 shadow maps. Recorded on a single GTX 750 Ti.
 
@@ -20,9 +21,9 @@ For users
 Download the mod and load it with Forge.
 You can start/stop recording by pressing F4 or using "/minema enable" and "/minema disable". If you are a mod developer and want to integrate with Minema, just using these commands might very well be enough for you.
 
-Minema can be configured quite substantially: Mods -> Minema -> Config. If you hover over one option it will display the explanation for this option. If you need further help, feel free to contact me or open an issue if you think that an explanation needs improvement.
+Minema can also be configured quite substantially: Mods -> Minema -> Config. If you hover over one option it will display the explanation for this option. If you need further help, feel free to contact me or open an issue if you think that an explanation needs improvement.
 
-There are several camera path tools that work with Minema: I recommend [BauerCam](https://github.com/daipenger/BauerCam) or if you need something more fancy [Aperture](https://minecraft.curseforge.com/projects/aperture).
+There are several camera path tools that work with Minema: Something simple is [BauerCam](https://github.com/daipenger/BauerCam) or if you need something more fancy [Aperture](https://minecraft.curseforge.com/projects/aperture).
 
 **Setting up FFMpeg:**
 
