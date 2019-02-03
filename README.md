@@ -25,13 +25,13 @@ Minema can also be configured quite substantially: Mods -> Minema -> Config. If 
 
 There are several camera path tools that work with Minema: Something simple is [BauerCam](https://github.com/daipenger/BauerCam) or if you need something more fancy [Aperture](https://minecraft.curseforge.com/projects/aperture).
 
-**Setting up FFMpeg:**
+**Setting up FFMpeg: (you have to do this if you want mp4 files)**
 
 Linux users should already be able to install FFMpeg using their favourite package manager. Otherwise you will find builds on https://www.ffmpeg.org/download.html#build-linux.
 
 Windows users can get builds here: [32bit](https://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-3.4.2-win32-static.zip), [64bit](https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-3.4.2-win64-static.zip). Unpack ffmpeg.exe inside this archive in bin/ and move it to the root minecraft install folder. (where you would also find options.txt)
 
-Make sure to enable 'Use video encoder'. If you are using very old (v3.2.3 and older) versions of Minema, you are out of support, several things will not work out of the box!
+Make sure to enable 'Use video encoder'.
 
 For developers
 ======
