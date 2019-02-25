@@ -89,7 +89,7 @@ public class PipeFrameExporter extends FrameExporter {
 		super.destroy();
 
 		try {
-			if (pipe.isOpen()) {
+			if (pipe != null && pipe.isOpen()) {
 				pipe.close();
 			}
 		} catch (IOException ex) {
