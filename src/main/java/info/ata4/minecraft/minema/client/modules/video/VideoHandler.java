@@ -103,27 +103,26 @@ public class VideoHandler extends CaptureModule {
 	}
 
 	private void onRenderMid(MidRenderEvent e) throws Exception {
-		if (depthReader == null)
-			return;
-
 		checkDimensions();
 
-		depthExport.waitForLastExport();
-		if (depthReader.readPixels()) {
-			ByteBuffer floats = depthReader.buffer;
+		if (depthReader != null) {
+			depthExport.waitForLastExport();
+			if (depthReader.readPixels()) {
+				ByteBuffer floats = depthReader.buffer;
 
-			while (floats.hasRemaining()) {
-				float f = floats.getFloat();
-				byte b = (byte) (linearizeDepth(f) * 255);
-				depthRemapping.put(b);
-				depthRemapping.put(b);
-				depthRemapping.put(b);
+				while (floats.hasRemaining()) {
+					float f = floats.getFloat();
+					byte b = (byte) (linearizeDepth(f) * 255);
+					depthRemapping.put(b);
+					depthRemapping.put(b);
+					depthRemapping.put(b);
+				}
+
+				floats.rewind();
+				depthRemapping.rewind();
+
+				depthExport.exportFrame(depthRemapping);
 			}
-
-			floats.rewind();
-			depthRemapping.rewind();
-
-			depthExport.exportFrame(depthRemapping);
 		}
 
 		if (!recordGui) {
