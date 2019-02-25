@@ -24,21 +24,20 @@ public abstract class CaptureModule {
 	 * 
 	 * @throws Exception
 	 */
-	public synchronized final void enable() throws Exception {
-		if (enabled) {
-			return;
+	public final void enable() throws Exception {
+		synchronized (this) {
+			if (enabled)
+				return;
+			if (!checkEnable())
+				return;
+			enabled = true;
 		}
 
-		if (checkEnable()) {
-
-			enabled = true;
-			L.info("Enabling " + getName());
-			try {
-				doEnable();
-			} catch (Exception e) {
-				throw new Exception("Cannot enable module", e);
-			}
-
+		L.info("Enabling " + getName());
+		try {
+			doEnable();
+		} catch (Exception e) {
+			throw new Exception("Cannot enable module", e);
 		}
 	}
 
@@ -49,9 +48,11 @@ public abstract class CaptureModule {
 	 * 
 	 * @throws Exception
 	 */
-	public synchronized final void disable() throws Exception {
-		if (!enabled) {
-			return;
+	public final void disable() throws Exception {
+		synchronized (this) {
+			if (!enabled)
+				return;
+			enabled = false;
 		}
 
 		L.info("Disabling " + getName());
@@ -60,8 +61,6 @@ public abstract class CaptureModule {
 		} catch (Exception e) {
 			throw new Exception("Cannot disable module", e);
 		}
-
-		enabled = false;
 	}
 
 	protected abstract void doEnable() throws Exception;
