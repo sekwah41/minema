@@ -29,7 +29,7 @@ There are several camera path tools that work with Minema: Something simple is [
 
 Linux users should already be able to install FFMpeg using their favourite package manager. Otherwise you will find builds on https://www.ffmpeg.org/download.html#build-linux.
 
-Windows users can get builds here: [32bit](https://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-3.4.2-win32-static.zip), [64bit](https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-3.4.2-win64-static.zip). Unpack ffmpeg.exe inside this archive in bin/ and move it to the root minecraft install folder. (where you would also find options.txt)
+Windows users can get builds here: [32bit](https://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-3.4.2-win32-static.zip), [64bit](https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-3.4.2-win64-static.zip). Unpack ffmpeg.exe (it is in bin/ in this archive) and move it to the root minecraft install folder. (where you would also find options.txt) You can also move it to somewhere else and change the encoder path if you prefer it that way.
 
 Make sure to enable 'Use video encoder'.
 
