@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
  * 
  * @author Gregosteros (minecraftforum) / daipenger (github)
  */
-@Mod(modid = Minema.MODID, name = Minema.NAME, clientSideOnly = true, acceptedMinecraftVersions = Minema.MCVERSION, version = "3.4.2", guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
+@Mod(modid = Minema.MODID, name = Minema.NAME, clientSideOnly = true, acceptedMinecraftVersions = Minema.MCVERSION, version = "3.4.3", guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
 public class Minema {
 
 	public static final String NAME = "Minema";
