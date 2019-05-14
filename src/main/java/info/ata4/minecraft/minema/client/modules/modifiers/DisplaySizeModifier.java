@@ -1,6 +1,8 @@
 package info.ata4.minecraft.minema.client.modules.modifiers;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 
 import info.ata4.minecraft.minema.Minema;
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
@@ -12,18 +14,26 @@ public class DisplaySizeModifier extends CaptureModule {
 
 	private int originalWidth;
 	private int originalHeight;
+	private boolean aaFastRenderFix;
 
 	@Override
-	protected void doEnable() {
+	protected void doEnable() throws LWJGLException {
 		MinemaConfig cfg = Minema.instance.getConfig();
 		originalWidth = Display.getWidth();
 		originalHeight = Display.getHeight();
 
+		aaFastRenderFix = cfg.aaFastRenderFix.get();
+
 		resize(cfg.getFrameWidth(), cfg.getFrameHeight());
 
-		// render framebuffer texture in original size
-		if (OpenGlHelper.isFramebufferEnabled()) {
-			setFramebufferTextureSize(originalWidth, originalHeight);
+		if (aaFastRenderFix) {
+			Display.setDisplayMode(new DisplayMode(cfg.getFrameWidth(), cfg.getFrameHeight()));
+			Display.update();
+		} else {
+			// render framebuffer texture in original size
+			if (OpenGlHelper.isFramebufferEnabled()) {
+				setFramebufferTextureSize(originalWidth, originalHeight);
+			}
 		}
 	}
 
@@ -33,7 +43,13 @@ public class DisplaySizeModifier extends CaptureModule {
 	}
 
 	@Override
-	protected void doDisable() {
+	protected void doDisable() throws LWJGLException {
+		if (aaFastRenderFix) {
+			Display.setDisplayMode(new DisplayMode(originalWidth, originalHeight));
+			// Fix MC-68754
+			Display.setResizable(false);
+			Display.setResizable(true);
+		}
 		resize(originalWidth, originalHeight);
 	}
 
