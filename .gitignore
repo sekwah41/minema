@@ -18,7 +18,8 @@ build
 .gradle
 
 # other
-.DS_Store
 eclipse
 run
-classified
+
+# Files from Forge MDK
+forge*changelog.txt
