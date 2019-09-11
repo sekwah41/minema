@@ -5,9 +5,6 @@ minema.error.label=Recording error:
 key.categories.minema=Minema
 key.minema.capture=Start/stop recording
 
-# commands
-commands.minema.usage=/minema <enable|disable>
-
 # config categories
 minema.config.encoding=Encoding
 minema.config.encoding.tooltip=Settings for video encoding.

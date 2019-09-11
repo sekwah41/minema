@@ -9,7 +9,7 @@ public class Utils {
 	public static void print(final String msg, final TextFormatting format) {
 		final TextComponentString text = new TextComponentString(msg == null ? "null" : msg);
 		text.getStyle().setColor(format);
-		Minecraft.getMinecraft().player.sendMessage(text);
+		Minecraft.getInstance().player.sendMessage(text);
 	}
 
 	public static void printError(Throwable throwable) {

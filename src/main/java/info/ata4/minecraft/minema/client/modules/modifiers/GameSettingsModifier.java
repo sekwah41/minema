@@ -10,7 +10,7 @@
 package info.ata4.minecraft.minema.client.modules.modifiers;
 
 import info.ata4.minecraft.minema.client.modules.CaptureModule;
-import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.GameSettings;
 
 /**
  *

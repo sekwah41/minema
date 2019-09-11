@@ -17,14 +17,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import info.ata4.minecraft.minema.Minema;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Tick synchronizer that virtually works like the escapement device of a clock
@@ -98,7 +98,7 @@ public class TickSynchronizer extends CaptureModule {
 		waitFor(evt.side, serverTick, clientTick, serverAhead, clientAhead);
 	}
 
-	private void waitFor(Side side, AtomicInteger actual, AtomicInteger target, Condition waitCon,
+	private void waitFor(LogicalSide side, AtomicInteger actual, AtomicInteger target, Condition waitCon,
 			Condition signalCon) {
 		lock.lock();
 
@@ -106,7 +106,7 @@ public class TickSynchronizer extends CaptureModule {
 			while (target.get() < actual.get()) {
 				if (L.isDebugEnabled()) {
 					int behind = actual.get() - target.get();
-					Side otherSide = side == Side.CLIENT ? Side.SERVER : Side.CLIENT;
+					LogicalSide otherSide = side == LogicalSide.CLIENT ? LogicalSide.SERVER : LogicalSide.CLIENT;
 					L.debug("{} waiting, {} {} ticks behind", side, otherSide, behind);
 				}
 
@@ -142,7 +142,7 @@ public class TickSynchronizer extends CaptureModule {
 		// server shutdowns may not be noticed by the ServerStopped event while
 		// the client is waiting for the server to continue, so do a continuous
 		// check instead
-		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+		MinecraftServer server = Minecraft.getInstance().getIntegratedServer();
 		if (server == null || !server.isServerRunning() || server.isServerStopped()) {
 			serverReady.set(false);
 		}

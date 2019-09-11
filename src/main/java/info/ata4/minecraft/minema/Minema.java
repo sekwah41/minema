@@ -1,21 +1,22 @@
 package info.ata4.minecraft.minema;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraft.command.Commands;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 /**
  * Most of the files in this repo do have the old copyright notice about
@@ -25,31 +26,38 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
  * 
  * @author Gregosteros (minecraftforum) / daipenger (github)
  */
-@Mod(modid = Minema.MODID, name = Minema.NAME, clientSideOnly = true, acceptedMinecraftVersions = Minema.MCVERSION, version = "3.4.3", guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
+@Mod(Minema.MODID)
+@OnlyIn(Dist.CLIENT)
 public class Minema {
 
-	public static final String NAME = "Minema";
 	public static final String MODID = "minema";
-	public static final String MCVERSION = "1.12.2";
 
 	private static final String category = "key.categories.minema";
-	private static final KeyBinding KEY_CAPTURE = new KeyBinding("key.minema.capture", Keyboard.KEY_F4, category);
+	private static final KeyBinding KEY_CAPTURE = new KeyBinding("key.minema.capture", GLFW.GLFW_KEY_F4, category);
 
-	@Instance(MODID)
 	public static Minema instance;
+	
+	public Minema() {
+		instance = this;
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onPreInit);
+	}
 
 	private MinemaConfig config;
 
-	@EventHandler
-	public void onPreInit(FMLPreInitializationEvent e) {
+	public void onPreInit(FMLCommonSetupEvent e) {
 		config = new MinemaConfig(new Configuration(e.getSuggestedConfigurationFile()));
-	}
-
-	@EventHandler
-	public void onInit(FMLInitializationEvent evt) {
-		ClientCommandHandler.instance.registerCommand(new CommandMinema());
 		ClientRegistry.registerKeyBinding(KEY_CAPTURE);
 		MinecraftForge.EVENT_BUS.register(this);
+	}
+	
+	public void onServerInit(FMLServerStartingEvent e) {
+		e.getCommandDispatcher().register(Commands.literal("minema").then(Commands.literal("enable").executes(c -> {
+			CaptureSession.singleton.startCapture();
+			return 0;
+		})).then(Commands.literal("disable").executes(c -> {
+			CaptureSession.singleton.stopCapture();
+			return 0;
+		})));
 	}
 
 	@SubscribeEvent

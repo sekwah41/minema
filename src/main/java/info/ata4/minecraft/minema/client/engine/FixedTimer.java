@@ -23,14 +23,15 @@ public class FixedTimer extends Timer {
 	private final float timerSpeed;
 
 	public FixedTimer(float tps, float fps, float speed) {
-		super(tps);
+		super(tps, 0);
 		ticksPerSecond = tps;
 		framesPerSecond = fps;
 		timerSpeed = speed;
 	}
-
+	
 	@Override
-	public void updateTimer() {
+	public void updateTimer(long someLastSyncNumber) {
+		// TODO: What does lastSyncSysClock actually do and do I have to care? Was introduced in 1.13.2
 		elapsedPartialTicks += timerSpeed * (ticksPerSecond / framesPerSecond);
 		elapsedTicks = (int) elapsedPartialTicks;
 		elapsedPartialTicks -= elapsedTicks;

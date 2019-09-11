@@ -22,7 +22,7 @@ import info.ata4.minecraft.minema.client.util.CaptureTime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
@@ -48,7 +48,7 @@ public class CaptureSession {
 		isEnabled = true;
 
 		try {
-			Minecraft MC = Minecraft.getMinecraft();
+			Minecraft MC = Minecraft.getInstance();
 			MinemaConfig cfg = Minema.instance.getConfig();
 
 			frameLimit = cfg.frameLimit.get();

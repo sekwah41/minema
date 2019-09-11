@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 
 public abstract class CaptureModule {
 
-	protected static final Minecraft MC = Minecraft.getMinecraft();
+	protected static final Minecraft MC = Minecraft.getInstance();
 	protected static final Logger L = LogManager.getLogger();
 	private boolean enabled;
 
