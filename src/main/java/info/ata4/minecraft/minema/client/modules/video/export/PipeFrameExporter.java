@@ -9,6 +9,13 @@
  */
 package info.ata4.minecraft.minema.client.modules.video.export;
 
+import info.ata4.minecraft.minema.CaptureSession;
+import info.ata4.minecraft.minema.Minema;
+import info.ata4.minecraft.minema.client.config.MinemaConfig;
+import net.minecraft.util.Util;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -21,12 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.lang3.StringUtils;
-
-import info.ata4.minecraft.minema.CaptureSession;
-import info.ata4.minecraft.minema.Minema;
-import info.ata4.minecraft.minema.client.config.MinemaConfig;
 
 /**
  *
@@ -59,7 +60,7 @@ public class PipeFrameExporter extends FrameExporter {
 		params = params.replace("%NAME%", movieName);
 
 		List<String> cmds = new ArrayList<>();
-		cmds.add(cfg.videoEncoderPath.get());
+		cmds.add(this.findFFMPEG(cfg.videoEncoderPath.get()));
 		cmds.addAll(Arrays.asList(StringUtils.split(params, ' ')));
 
 		// build encoder process and redirect output
@@ -82,6 +83,28 @@ public class PipeFrameExporter extends FrameExporter {
 		}
 
 		pipe = Channels.newChannel(os);
+	}
+
+	/**
+	 * People usually are not bright enough, even though everything is stated
+	 * in the tutorial, they still manage to specify either wrong path to ffmpeg, or
+	 * they specify the path to the folder...
+	 *
+	 * This little method should simplify their lives!
+	 */
+	private String findFFMPEG(String path) {
+		File file = new File(path);
+
+		if (file.isDirectory()) {
+			String subpath = Util.getOSType() == Util.EnumOS.WINDOWS ? "bin\\ffmpeg.exe" : "bin/ffmpeg";
+			File bin = new File(file, subpath);
+
+			if (bin.isFile()) {
+				return bin.getAbsolutePath();
+			}
+		}
+
+		return path;
 	}
 
 	@Override
