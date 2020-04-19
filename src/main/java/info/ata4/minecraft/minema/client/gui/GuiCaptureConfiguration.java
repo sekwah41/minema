@@ -56,7 +56,7 @@ public class GuiCaptureConfiguration extends GuiScreen {
 
         y += 45;
 
-        this.engineSpeed = new GuiTextField(4, this.fontRenderer, x + 1, y + 1, 298, 18);
+        this.engineSpeed = new GuiTextField(5, this.fontRenderer, x + 1, y + 1, 298, 18);
 
         y = this.height - 30;
 

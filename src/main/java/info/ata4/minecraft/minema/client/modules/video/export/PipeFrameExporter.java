@@ -12,6 +12,7 @@ package info.ata4.minecraft.minema.client.modules.video.export;
 import info.ata4.minecraft.minema.CaptureSession;
 import info.ata4.minecraft.minema.Minema;
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
+import info.ata4.minecraft.minema.client.util.MinemaException;
 import net.minecraft.util.Util;
 import org.apache.commons.lang3.StringUtils;
 
@@ -56,21 +57,7 @@ public class PipeFrameExporter extends FrameExporter {
 
 		// Add human readable error messages
 		if (!new File(ffmpeg).isFile()) {
-			throw new Exception("ffmpeg wasn't found at given path: " + ffmpeg + "! Specify the correct path to ffmpeg, please!");
-		}
-
-		File capture = path.toFile();
-
-		if (capture.isDirectory() && !capture.canWrite()) {
-			this.badPermission(capture.getAbsolutePath());
-		} else if (!capture.exists()) {
-			try {
-				if (!capture.mkdirs()) {
-					this.badPermission(capture.getAbsolutePath());
-				}
-			} catch (Exception e) {
-				this.badPermission(capture.getAbsolutePath());
-			}
+			throw new MinemaException("ffmpeg wasn't found at given path '" + ffmpeg + "'! Specify the correct path to ffmpeg, please!");
 		}
 
 		String params = cfg.videoEncoderParams.get();
@@ -88,7 +75,12 @@ public class PipeFrameExporter extends FrameExporter {
 		pb.directory(path.toFile());
 		pb.redirectErrorStream(true);
 		pb.redirectOutput(path.resolve(movieName.concat(".log")).toFile());
-		proc = pb.start();
+
+		try {
+			proc = pb.start();
+		} catch (Exception e) {
+			throw new MinemaException("Cannot export video to '" + path.toFile().getAbsolutePath() + "' due to not having permission! Please specify another capture path!", e);
+		}
 
 		// Java wraps the process output stream into a BufferedOutputStream,
 		// but its little buffer is just slowing everything down with the
@@ -125,10 +117,6 @@ public class PipeFrameExporter extends FrameExporter {
 		}
 
 		return path;
-	}
-
-	private void badPermission(String path) throws Exception {
-		throw new Exception("You don't have permissions to capture footage to: " + path + "! Specify another capture folder, please!");
 	}
 
 	@Override

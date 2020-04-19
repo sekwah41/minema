@@ -1,5 +1,6 @@
 package info.ata4.minecraft.minema;
 
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,6 +20,7 @@ import info.ata4.minecraft.minema.client.modules.modifiers.GameSettingsModifier;
 import info.ata4.minecraft.minema.client.modules.modifiers.TimerModifier;
 import info.ata4.minecraft.minema.client.modules.video.VideoHandler;
 import info.ata4.minecraft.minema.client.util.CaptureTime;
+import info.ata4.minecraft.minema.client.util.MinemaException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -59,7 +61,13 @@ public class CaptureSession {
 			captureDir = Paths.get(cfg.capturePath.get());
 
 			if (!Files.exists(captureDir)) {
-				Files.createDirectories(captureDir);
+				try {
+					Files.createDirectories(captureDir);
+				} catch (SecurityException e) {
+					throw new MinemaException("Capture path '" + captureDir.toFile().getAbsolutePath() + "' cannot be created due to not having permission! Please specify another capture path!");
+				}
+			} else if (!Files.isDirectory(captureDir)) {
+				throw new MinemaException("Capture path '" + captureDir.toFile().getAbsolutePath() + "' is an already existing file! Please specify another capture path!");
 			}
 
 			if (cfg.syncEngine.get() & !MC.isSingleplayer()) {
@@ -80,8 +88,16 @@ public class CaptureSession {
 			MinecraftForge.EVENT_BUS.register(this);
 
 			time = new CaptureTime(cfg.frameRate.get());
+		} catch (MinemaException e) {
+			Utils.printPrettyError(e);
+			stopCapture();
 		} catch (Exception e) {
-			Utils.printError(e);
+			if (e.getCause() != null && e.getCause() instanceof MinemaException) {
+				Utils.printPrettyError(e);
+			} else {
+				Utils.printError(e);
+			}
+
 			stopCapture();
 		}
 
