@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.chunk.CompiledChunk;
 import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
@@ -55,16 +56,18 @@ public class ChunkPreloader extends CaptureModule {
 
 	@Override
 	protected void doEnable() throws Exception {
-		renderInfosField = RenderGlobal.class.getDeclaredField("field_72755_R");
-		renderInfosField.setAccessible(true);
-		renderDispatcherField = RenderGlobal.class.getDeclaredField("field_174995_M");
-		renderDispatcherField.setAccessible(true);
-		renderViewFrustum = RenderGlobal.class.getDeclaredField("field_175008_n");
+		// RenderGlobal.class.getDeclaredField("field_72755_R");
+		renderInfosField = ObfuscationReflectionHelper.findField(RenderGlobal.class, "renderInfos");
+		// RenderGlobal.class.getDeclaredField("field_174995_M");
+		renderDispatcherField = ObfuscationReflectionHelper.findField(RenderGlobal.class, "renderDispatcher");
+		// RenderGlobal.class.getDeclaredField("field_175008_n")
+		renderViewFrustum = ObfuscationReflectionHelper.findField(RenderGlobal.class, "viewFrustum");
 		renderViewFrustum.setAccessible(true);
 
 		for (Class<?> innerClass : RenderGlobal.class.getDeclaredClasses()) {
 			if (innerClass.getName().endsWith("ContainerLocalRenderInformation")) {
-				renderChunkField = innerClass.getDeclaredField("field_178036_a");
+				// innerClass.getDeclaredField("field_178036_a")
+				renderChunkField = ObfuscationReflectionHelper.findField(innerClass, "renderChunk");
 				renderChunkField.setAccessible(true);
 				break;
 			}
