@@ -57,18 +57,16 @@ public class ChunkPreloader extends CaptureModule {
 	@Override
 	protected void doEnable() throws Exception {
 		// RenderGlobal.class.getDeclaredField("field_72755_R");
-		renderInfosField = ObfuscationReflectionHelper.findField(RenderGlobal.class, "renderInfos");
+		renderInfosField = Utils.getField(RenderGlobal.class, "field_72755_R", "renderInfos");
 		// RenderGlobal.class.getDeclaredField("field_174995_M");
-		renderDispatcherField = ObfuscationReflectionHelper.findField(RenderGlobal.class, "renderDispatcher");
+		renderDispatcherField = Utils.getField(RenderGlobal.class, "field_174995_M", "renderDispatcher");
 		// RenderGlobal.class.getDeclaredField("field_175008_n")
-		renderViewFrustum = ObfuscationReflectionHelper.findField(RenderGlobal.class, "viewFrustum");
-		renderViewFrustum.setAccessible(true);
+		renderViewFrustum = Utils.getField(RenderGlobal.class, "field_175008_n", "viewFrustum");
 
 		for (Class<?> innerClass : RenderGlobal.class.getDeclaredClasses()) {
 			if (innerClass.getName().endsWith("ContainerLocalRenderInformation")) {
 				// innerClass.getDeclaredField("field_178036_a")
-				renderChunkField = ObfuscationReflectionHelper.findField(innerClass, "renderChunk");
-				renderChunkField.setAccessible(true);
+				renderChunkField = Utils.getField(innerClass, "field_178036_a", "renderChunk");
 				break;
 			}
 		}

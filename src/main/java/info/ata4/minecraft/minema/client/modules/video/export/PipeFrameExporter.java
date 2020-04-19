@@ -63,7 +63,7 @@ public class PipeFrameExporter extends FrameExporter {
 
 		if (capture.isDirectory() && !capture.canWrite()) {
 			this.badPermission(capture.getAbsolutePath());
-		} else {
+		} else if (!capture.exists()) {
 			try {
 				if (!capture.mkdirs()) {
 					this.badPermission(capture.getAbsolutePath());

@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
+import java.lang.reflect.Field;
+
 public class Utils {
 
 	public static void print(final String msg, final TextFormatting format) {
@@ -23,6 +25,26 @@ public class Utils {
 		}
 		throwable.printStackTrace();
 		print("See log for full stacktrace", TextFormatting.RED);
+	}
+
+	public static Field getField(Class clazz, String mcp, String srg) {
+		Field field = null;
+
+		try {
+			field = clazz.getDeclaredField(mcp);
+		} catch (Exception e) {}
+
+		if (field == null) {
+			try {
+				field = clazz.getDeclaredField(srg);
+			} catch (Exception e) {}
+		}
+
+		if (field != null) {
+			field.setAccessible(true);
+		}
+
+		return field;
 	}
 
 }
