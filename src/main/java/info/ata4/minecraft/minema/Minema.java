@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
  * 
  * @author Gregosteros (minecraftforum) / daipenger (github)
  */
-@Mod(modid = Minema.MODID, name = Minema.NAME, clientSideOnly = true, acceptedMinecraftVersions = Minema.MCVERSION, version = "3.4.3", guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
+@Mod(modid = Minema.MODID, name = Minema.NAME, clientSideOnly = true, acceptedMinecraftVersions = Minema.MCVERSION, version = "%VERSION%", guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
 public class Minema {
 
 	public static final String NAME = "Minema";
@@ -74,11 +74,7 @@ public class Minema {
 		if (KEY_CAPTURE.isPressed()) {
 			if (GuiScreen.isShiftKeyDown() && !CaptureSession.singleton.isEnabled()) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiCaptureConfiguration());
-
-				return;
-			}
-
-			if (!CaptureSession.singleton.startCapture())
+			} else if (!CaptureSession.singleton.startCapture())
 				CaptureSession.singleton.stopCapture();
 		}
 	}
