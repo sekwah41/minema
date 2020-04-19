@@ -26,6 +26,7 @@ public class GuiCaptureConfiguration extends GuiScreen {
     public GuiTextField videoHeight;
     public GuiTextField frameRate;
     public GuiTextField frameLimit;
+    public GuiTextField engineSpeed;
 
     public GuiButton showConfig;
     public GuiButton showRecordings;
@@ -39,11 +40,11 @@ public class GuiCaptureConfiguration extends GuiScreen {
 
         int width = 300;
         int x = (this.width - width) / 2;
-        int y = 60;
+        int y = 50;
 
         this.name = new GuiTextField(0, this.fontRenderer, x + 1, y + 1, 298, 18);
 
-        y += 60;
+        y += 45;
 
         this.videoWidth = new GuiTextField(1, this.fontRenderer, x + 1, y + 1, 143, 18);
         this.videoHeight = new GuiTextField(2, this.fontRenderer, x + 155 + 1, y + 1, 143, 18);
@@ -53,7 +54,11 @@ public class GuiCaptureConfiguration extends GuiScreen {
         this.frameRate = new GuiTextField(3, this.fontRenderer, x + 1, y + 1, 143, 18);
         this.frameLimit = new GuiTextField(4, this.fontRenderer, x + 155 + 1, y + 1, 143, 18);
 
-        y = this.height - 40;
+        y += 45;
+
+        this.engineSpeed = new GuiTextField(4, this.fontRenderer, x + 1, y + 1, 298, 18);
+
+        y = this.height - 30;
 
         this.showConfig = new GuiButton(5, x, y, 95, 20, "Mod Options");
         this.showRecordings = new GuiButton(6, x + 100, y, 100, 20, "Movies Folder");
@@ -70,6 +75,16 @@ public class GuiCaptureConfiguration extends GuiScreen {
         this.videoHeight.setText(cfg.frameHeight.get().toString());
         this.frameRate.setText(cfg.frameRate.get().toString());
         this.frameLimit.setText(cfg.frameLimit.get().toString());
+        this.engineSpeed.setText(cfg.engineSpeed.get().toString());
+    }
+
+    public void saveConfigValues() {
+        MinemaConfig cfg = Minema.instance.getConfig();
+        cfg.frameWidth.set(this.parseInt(this.videoWidth.getText(), cfg.frameWidth.get()));
+        cfg.frameHeight.set(this.parseInt(this.videoHeight.getText(), cfg.frameHeight.get()));
+        cfg.frameRate.set(this.parseDouble(this.frameRate.getText(), cfg.frameRate.get()));
+        cfg.frameLimit.set(this.parseInt(this.frameLimit.getText(), cfg.frameLimit.get()));
+        cfg.engineSpeed.set(this.parseDouble(this.engineSpeed.getText(), cfg.engineSpeed.get()));
     }
 
     @Override
@@ -77,6 +92,7 @@ public class GuiCaptureConfiguration extends GuiScreen {
         MinemaConfig cfg = Minema.instance.getConfig();
 
         if (button == this.showConfig) {
+            this.saveConfigValues();
             IModGuiFactory guiFactory = FMLClientHandler.instance().getGuiFactoryFor(Minema.container);
             GuiScreen newScreen = guiFactory.createConfigGui(this);
 
@@ -94,11 +110,7 @@ public class GuiCaptureConfiguration extends GuiScreen {
                 return;
 
             VideoHandler.customName = this.name.getText();
-            cfg.frameWidth.set(this.parseInt(this.videoWidth.getText(), cfg.frameWidth.get()));
-            cfg.frameHeight.set(this.parseInt(this.videoHeight.getText(), cfg.frameHeight.get()));
-            cfg.frameRate.set(this.parseDouble(this.frameRate.getText(), cfg.frameRate.get()));
-            cfg.frameLimit.set(this.parseInt(this.frameLimit.getText(), cfg.frameLimit.get()));
-
+            this.saveConfigValues();
             CaptureSession.singleton.startCapture();
 
             this.mc.displayGuiScreen(null);
@@ -133,6 +145,7 @@ public class GuiCaptureConfiguration extends GuiScreen {
         this.videoHeight.mouseClicked(mouseX, mouseY, mouseButton);
         this.frameRate.mouseClicked(mouseX, mouseY, mouseButton);
         this.frameLimit.mouseClicked(mouseX, mouseY, mouseButton);
+        this.engineSpeed.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -140,13 +153,21 @@ public class GuiCaptureConfiguration extends GuiScreen {
         if (keyCode == Keyboard.KEY_RETURN && !this.movieExists)
             this.actionPerformed(this.record);
 
-        super.keyTyped(typedChar, keyCode);
+        if (keyCode == 1) {
+            this.saveConfigValues();
+            this.mc.displayGuiScreen(null);
+
+            if (this.mc.currentScreen == null) {
+                this.mc.setIngameFocus();
+            }
+        }
 
         this.name.textboxKeyTyped(typedChar, keyCode);
         this.videoWidth.textboxKeyTyped(typedChar, keyCode);
         this.videoHeight.textboxKeyTyped(typedChar, keyCode);
         this.frameRate.textboxKeyTyped(typedChar, keyCode);
         this.frameLimit.textboxKeyTyped(typedChar, keyCode);
+        this.engineSpeed.textboxKeyTyped(typedChar, keyCode);
 
         this.updateMoviesExist();
     }
@@ -163,13 +184,15 @@ public class GuiCaptureConfiguration extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
 
-        this.drawCenteredString(this.fontRenderer, "Video recording configuration", this.width / 2, 20, 0xffffff);
+        this.drawCenteredString(this.fontRenderer, "Video recording configuration", this.width / 2, 10, 0xffffff);
 
         this.fontRenderer.drawStringWithShadow("Output name", this.name.x, this.name.y - 12, 0xffffff);
         this.fontRenderer.drawStringWithShadow("Width", this.videoWidth.x, this.videoWidth.y - 12, 0xffffff);
         this.fontRenderer.drawStringWithShadow("Height", this.videoHeight.x, this.videoHeight.y - 12, 0xffffff);
         this.fontRenderer.drawStringWithShadow("Frame rate (FPS)", this.frameRate.x, this.frameRate.y - 12, 0xffffff);
         this.fontRenderer.drawStringWithShadow("Frame limit", this.frameLimit.x, this.frameLimit.y - 12, 0xffffff);
+        this.fontRenderer.drawStringWithShadow("Engine speed", this.engineSpeed.x, this.engineSpeed.y - 12, 0xffffff);
+        this.fontRenderer.drawStringWithShadow("Ex. 1 = normal, 2 (2/1) = 2x faster, 0.5 (1/2) = 2x slower", this.engineSpeed.x, this.engineSpeed.y + 24, 0x888888);
 
         if (this.movieExists)
             this.fontRenderer.drawStringWithShadow("A file with such name exists already, pick another...", this.name.x, this.name.y + 22, 0xff3355);
@@ -179,6 +202,7 @@ public class GuiCaptureConfiguration extends GuiScreen {
         this.videoHeight.drawTextBox();
         this.frameRate.drawTextBox();
         this.frameLimit.drawTextBox();
+        this.engineSpeed.drawTextBox();
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
