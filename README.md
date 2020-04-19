@@ -19,7 +19,7 @@ For users
 **Installing and using:**
 
 Download the mod and load it with Forge.
-You can start/stop recording by pressing F4 or using "/minema enable" and "/minema disable". If you are a mod developer and want to integrate with Minema, just using these commands might very well be enough for you.
+You can start/stop recording by pressing F4 (you can also press Shift + F4 for advanced configuration) or using "/minema enable" and "/minema disable". If you are a mod developer and want to integrate with Minema, just using these commands might very well be enough for you.
 
 Minema can also be configured quite substantially: Mods -> Minema -> Config. If you hover over one option it will display the explanation for this option. If you need further help, feel free to contact me or open an issue if you think that an explanation needs improvement.
 
@@ -31,7 +31,9 @@ Linux users should already be able to install FFMpeg using their favourite packa
 
 Windows users can get builds here: [32bit](https://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-3.4.2-win32-static.zip), [64bit](https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-3.4.2-win64-static.zip). Unpack ffmpeg.exe (it is in bin/ in this archive) and move it to the root minecraft install folder. (where you would also find options.txt) You can also move it to somewhere else and change the encoder path if you prefer it that way.
 
-Make sure to enable 'Use video encoder'.
+Make sure to enable 'Use video encoder'. If you have troubles setting up FFMpeg or Minema, make sure to check out this video:
+
+[![Thumbnail](http://i3.ytimg.com/vi/wBfOn4cmUDw/maxresdefault.jpg)](https://www.youtube.com/watch?v=wBfOn4cmUDw)
 
 For developers
 ======
