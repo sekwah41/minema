@@ -52,6 +52,26 @@ public class PipeFrameExporter extends FrameExporter {
 
 		MinemaConfig cfg = Minema.instance.getConfig();
 		Path path = CaptureSession.singleton.getCaptureDir();
+		String ffmpeg = this.findFFMPEG(cfg.videoEncoderPath.get());
+
+		// Add human readable error messages
+		if (!new File(ffmpeg).isFile()) {
+			throw new Exception("ffmpeg wasn't found at given path: " + ffmpeg + "! Specify the correct path to ffmpeg, please!");
+		}
+
+		File capture = path.toFile();
+
+		if (capture.isDirectory() && !capture.canWrite()) {
+			this.badPermission(capture.getAbsolutePath());
+		} else {
+			try {
+				if (!capture.mkdirs()) {
+					this.badPermission(capture.getAbsolutePath());
+				}
+			} catch (Exception e) {
+				this.badPermission(capture.getAbsolutePath());
+			}
+		}
 
 		String params = cfg.videoEncoderParams.get();
 		params = params.replace("%WIDTH%", String.valueOf(width));
@@ -60,7 +80,7 @@ public class PipeFrameExporter extends FrameExporter {
 		params = params.replace("%NAME%", movieName);
 
 		List<String> cmds = new ArrayList<>();
-		cmds.add(this.findFFMPEG(cfg.videoEncoderPath.get()));
+		cmds.add(ffmpeg);
 		cmds.addAll(Arrays.asList(StringUtils.split(params, ' ')));
 
 		// build encoder process and redirect output
@@ -105,6 +125,10 @@ public class PipeFrameExporter extends FrameExporter {
 		}
 
 		return path;
+	}
+
+	private void badPermission(String path) throws Exception {
+		throw new Exception("You don't have permissions to capture footage to: " + path + "! Specify another capture folder, please!");
 	}
 
 	@Override

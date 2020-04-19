@@ -13,13 +13,13 @@ public class Utils {
 	}
 
 	public static void printError(Throwable throwable) {
-		print(throwable.getClass().getName(), TextFormatting.RED);
-		print(throwable.getMessage(), TextFormatting.RED);
+		// print(throwable.getClass().getName(), TextFormatting.RED);
+		// print(throwable.getMessage(), TextFormatting.RED);
 		Throwable cause = throwable.getCause();
 		if (cause != null) {
-			print("Cause:", TextFormatting.RED);
-			print(cause.getClass().getName(), TextFormatting.RED);
-			print(cause.getMessage(), TextFormatting.RED);
+			// print("Cause:", TextFormatting.RED);
+			// print(cause.getClass().getName(), TextFormatting.RED);
+			print(cause.getClass().getName() + ": " + cause.getMessage() + "\n", TextFormatting.RED);
 		}
 		throwable.printStackTrace();
 		print("See log for full stacktrace", TextFormatting.RED);
