@@ -79,7 +79,7 @@ public class PipeFrameExporter extends FrameExporter {
 		try {
 			proc = pb.start();
 		} catch (Exception e) {
-			throw new MinemaException("Cannot export video to '" + path.toFile().getAbsolutePath() + "' due to not having permission! Please specify another capture path!", e);
+			throw new MinemaException("Either cannot export video to '" + path.toFile().getAbsolutePath() + "' due to not having permission, or given encoder path '" + ffmpeg + "' is not executable (no permissions to execute this file) or it's not ffmpeg! Please specify another capture or encoder (ffmpeg) path!", e);
 		}
 
 		// Java wraps the process output stream into a BufferedOutputStream,
@@ -108,8 +108,15 @@ public class PipeFrameExporter extends FrameExporter {
 		File file = new File(path);
 
 		if (file.isDirectory()) {
-			String subpath = Util.getOSType() == Util.EnumOS.WINDOWS ? "bin\\ffmpeg.exe" : "bin/ffmpeg";
+			boolean isWin = Util.getOSType() == Util.EnumOS.WINDOWS;
+			String subpath = isWin ? "ffmpeg.exe" : "ffmpeg";
 			File bin = new File(file, subpath);
+
+			if (bin.isFile()) {
+				return bin.getAbsolutePath();
+			}
+
+			bin = new File(file, "bin" + (isWin ? "\\" : "/") + subpath);
 
 			if (bin.isFile()) {
 				return bin.getAbsolutePath();
