@@ -3,7 +3,7 @@
   "modid": "minema",
   "name": "Minema",
   "description": "This mod allows you to record fluid movies in Minecraft, even if the video recording itself is not.",
-  "version": "%VERSION%-ShaderSync",
+  "version": "${version}-ShaderSync",
   "mcversion": "1.12.2",
   "url": "https://github.com/daipenger/minema",
   "authorList": ["Barracuda","Gregosteros"]
