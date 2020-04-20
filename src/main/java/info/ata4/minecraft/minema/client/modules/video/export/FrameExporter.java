@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import net.minecraft.client.resources.I18n;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,8 +64,7 @@ public abstract class FrameExporter {
 			try {
 				doExportFrame(buffer);
 			} catch (Exception ex) {
-				throw new RuntimeException("Can't export frame " + CaptureSession.singleton.getTime().getNumFrames(),
-						ex);
+				throw new RuntimeException(I18n.format("minema.error.export_frame", CaptureSession.singleton.getTime().getNumFrames()), ex);
 			}
 		});
 	}

@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.ViewFrustum;
 import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
 import net.minecraft.client.renderer.chunk.CompiledChunk;
 import net.minecraft.client.renderer.chunk.RenderChunk;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -49,23 +50,19 @@ public class ChunkPreloader extends CaptureModule {
 				}
 			}
 		} catch (Exception e) {
-			Utils.print("Could not do chunk preloading", TextFormatting.RED);
+			Utils.print(I18n.format("minema.error.chunk_preload"), TextFormatting.RED);
 			Utils.printError(e);
 		}
 	}
 
 	@Override
 	protected void doEnable() throws Exception {
-		// RenderGlobal.class.getDeclaredField("field_72755_R");
 		renderInfosField = Utils.getField(RenderGlobal.class, "field_72755_R", "renderInfos");
-		// RenderGlobal.class.getDeclaredField("field_174995_M");
 		renderDispatcherField = Utils.getField(RenderGlobal.class, "field_174995_M", "renderDispatcher");
-		// RenderGlobal.class.getDeclaredField("field_175008_n")
 		renderViewFrustum = Utils.getField(RenderGlobal.class, "field_175008_n", "viewFrustum");
 
 		for (Class<?> innerClass : RenderGlobal.class.getDeclaredClasses()) {
 			if (innerClass.getName().endsWith("ContainerLocalRenderInformation")) {
-				// innerClass.getDeclaredField("field_178036_a")
 				renderChunkField = Utils.getField(innerClass, "field_178036_a", "renderChunk");
 				break;
 			}

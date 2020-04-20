@@ -1,5 +1,6 @@
 package info.ata4.minecraft.minema.client.modules;
 
+import net.minecraft.client.resources.I18n;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +38,7 @@ public abstract class CaptureModule {
 		try {
 			doEnable();
 		} catch (Exception e) {
-			throw new Exception("Cannot enable module", e);
+			throw new Exception(I18n.format("minema.error.enable_module"), e);
 		}
 	}
 
@@ -59,7 +60,7 @@ public abstract class CaptureModule {
 		try {
 			doDisable();
 		} catch (Exception e) {
-			throw new Exception("Cannot disable module", e);
+			throw new Exception(I18n.format("minema.error.disable_module"), e);
 		}
 	}
 

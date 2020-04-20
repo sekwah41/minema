@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import net.minecraft.client.resources.I18n;
 import org.lwjgl.opengl.GLContext;
 
 import info.ata4.minecraft.minema.CaptureSession;
@@ -161,7 +162,7 @@ public class VideoHandler extends CaptureModule {
 
 	private void checkDimensions() {
 		if (MC.displayWidth != startWidth || MC.displayHeight != startHeight) {
-			throw new IllegalStateException(String.format("Display size changed! Current: %dx%d Start: %dx%d",
+			throw new IllegalStateException(I18n.format("minema.error.size_change",
 					MC.displayWidth, MC.displayHeight, startWidth, startHeight));
 		}
 	}

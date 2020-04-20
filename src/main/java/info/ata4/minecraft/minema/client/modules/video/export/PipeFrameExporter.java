@@ -13,6 +13,7 @@ import info.ata4.minecraft.minema.CaptureSession;
 import info.ata4.minecraft.minema.Minema;
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import info.ata4.minecraft.minema.client.util.MinemaException;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.Util;
 import org.apache.commons.lang3.StringUtils;
 
@@ -57,7 +58,7 @@ public class PipeFrameExporter extends FrameExporter {
 
 		// Add human readable error messages
 		if (!new File(ffmpeg).isFile()) {
-			throw new MinemaException("ffmpeg wasn't found at given path '" + ffmpeg + "'! Specify the correct path to ffmpeg, please!");
+			throw new MinemaException(I18n.format("minema.error.ffmpeg_not_exists", ffmpeg));
 		}
 
 		String params = cfg.videoEncoderParams.get();
@@ -79,7 +80,7 @@ public class PipeFrameExporter extends FrameExporter {
 		try {
 			proc = pb.start();
 		} catch (Exception e) {
-			throw new MinemaException("Either cannot export video to '" + path.toFile().getAbsolutePath() + "' due to not having permission, or given encoder path '" + ffmpeg + "' is not executable (no permissions to execute this file) or it's not ffmpeg! Please specify another capture or encoder (ffmpeg) path!", e);
+			throw new MinemaException(I18n.format("minema.error.ffmpeg_error", path.toFile().getAbsolutePath(), ffmpeg), e);
 		}
 
 		// Java wraps the process output stream into a BufferedOutputStream,

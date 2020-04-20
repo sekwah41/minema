@@ -1,5 +1,34 @@
 # messages
+minema.error.warning=Warning!
+minema.error.tick_sync=Tick sync is NOT going to work! Record in singleplayer!
+minema.error.chunk_loading=Instant chunk loading should be used in singleplayer for its full effect!
+minema.error.chunk_preload=Could not do chunk preloading
+minema.error.stacktrace=See log for full stacktrace
+minema.error.cause=Cause:
+
 minema.error.label=Recording error:
+minema.error.enable_module=Cannot enable module
+minema.error.disable_module=Cannot disable module
+minema.error.capture_path_permissions=Capture path '%s' cannot be created due to not having permission! Please specify another capture path!
+minema.error.capture_path_exists=Capture path '%s' is an already existing file! Please specify another capture path
+minema.error.ffmpeg_not_exists=ffmpeg wasn't found at given path '%s'! Specify the correct path to ffmpeg, please!
+minema.error.ffmpeg_error=Either cannot export video to '%s' due to not having permission, or given encoder path '%s' is not executable (no permissions to execute this file) or it's not ffmpeg! Please specify another capture or encoder (ffmpeg) path!"
+minema.error.export_frame=Can't export frame %s
+minema.error.size_change=Display size changed! Current: %dx%d Start: %dx%d
+
+# GUI
+minema.gui.title=Video recording configuration
+minema.gui.movies_folder=Movies Folder
+minema.gui.record=Record...
+
+minema.gui.name=Output name
+minema.gui.width=Width
+minema.gui.height=Height
+minema.gui.fps=Frame rate (FPS)
+minema.gui.limit=Frame limit
+minema.gui.speed=Engine speed
+minema.gui.speed.tooltip=Ex. 1 = normal, 2 (2/1) = 2x faster, 0.5 (1/2) = 2x slower
+minema.gui.file_exists=A file with such name exists already, pick another...
 
 # keys
 key.categories.minema=Minema

@@ -2,6 +2,7 @@ package info.ata4.minecraft.minema;
 
 import info.ata4.minecraft.minema.client.util.MinemaException;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
@@ -20,12 +21,12 @@ public class Utils {
 		print(throwable.getMessage(), TextFormatting.RED);
 		Throwable cause = throwable.getCause();
 		if (cause != null) {
-			print("Cause:", TextFormatting.RED);
+			print(I18n.format("minema.error.cause"), TextFormatting.RED);
 			print(cause.getClass().getName(), TextFormatting.RED);
 			print(cause.getMessage(), TextFormatting.RED);
 		}
 		throwable.printStackTrace();
-		print("See log for full stacktrace", TextFormatting.RED);
+		print(I18n.format("minema.error.stacktrace"), TextFormatting.RED);
 	}
 
 	public static void printPrettyError(Throwable throwable) {
@@ -40,7 +41,7 @@ public class Utils {
 		}
 
 		throwable.printStackTrace();
-		print("See log for full stacktrace", TextFormatting.RED);
+		print(I18n.format("minema.error.stacktrace"), TextFormatting.RED);
 	}
 
 	public static Field getField(Class clazz, String mcp, String srg) {

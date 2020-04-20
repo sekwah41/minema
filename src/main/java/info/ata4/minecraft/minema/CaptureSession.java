@@ -22,6 +22,7 @@ import info.ata4.minecraft.minema.client.modules.video.VideoHandler;
 import info.ata4.minecraft.minema.client.util.CaptureTime;
 import info.ata4.minecraft.minema.client.util.MinemaException;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -64,21 +65,20 @@ public class CaptureSession {
 				try {
 					Files.createDirectories(captureDir);
 				} catch (SecurityException e) {
-					throw new MinemaException("Capture path '" + captureDir.toFile().getAbsolutePath() + "' cannot be created due to not having permission! Please specify another capture path!");
+					throw new MinemaException(I18n.format("minema.error.capture_path_permissions", captureDir.toFile().getAbsolutePath()));
 				}
 			} else if (!Files.isDirectory(captureDir)) {
-				throw new MinemaException("Capture path '" + captureDir.toFile().getAbsolutePath() + "' is an already existing file! Please specify another capture path!");
+				throw new MinemaException(I18n.format("minema.error.capture_path_exists", captureDir.toFile().getAbsolutePath()));
 			}
 
 			if (cfg.syncEngine.get() & !MC.isSingleplayer()) {
-				Utils.print("WARNING!", TextFormatting.RED);
-				Utils.print("Tick sync is NOT going to work! Record in singleplayer!", TextFormatting.RED);
+				Utils.print(I18n.format("minema.error.warning").toUpperCase(), TextFormatting.RED);
+				Utils.print(I18n.format("minema.error.tick_sync"), TextFormatting.RED);
 			}
 
 			if (cfg.preloadChunks.get() & !MC.isSingleplayer()) {
-				Utils.print("Warning!", TextFormatting.YELLOW);
-				Utils.print("Instant chunk loading should be used in singleplayer for its full effect!",
-						TextFormatting.YELLOW);
+				Utils.print(I18n.format("minema.error.warning"), TextFormatting.YELLOW);
+				Utils.print(I18n.format("minema.error.chunk_loading"), TextFormatting.YELLOW);
 			}
 
 			for (CaptureModule m : modules) {

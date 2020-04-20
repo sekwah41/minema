@@ -7,6 +7,7 @@ import info.ata4.minecraft.minema.client.modules.video.VideoHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.IModGuiFactory;
 import org.lwjgl.input.Keyboard;
@@ -60,9 +61,9 @@ public class GuiCaptureConfiguration extends GuiScreen {
 
         y = this.height - 30;
 
-        this.showConfig = new GuiButton(5, x, y, 95, 20, "Mod Options");
-        this.showRecordings = new GuiButton(6, x + 100, y, 100, 20, "Movies Folder");
-        this.record = new GuiButton(7, x + 205, y, 95, 20, "Record...");
+        this.showConfig = new GuiButton(5, x, y, 95, 20, I18n.format("fml.menu.modoptions"));
+        this.showRecordings = new GuiButton(6, x + 100, y, 100, 20, I18n.format("minema.gui.movies_folder"));
+        this.record = new GuiButton(7, x + 205, y, 95, 20, I18n.format("minema.gui.record"));
 
         this.buttonList.add(this.showConfig);
         this.buttonList.add(this.showRecordings);
@@ -103,7 +104,7 @@ public class GuiCaptureConfiguration extends GuiScreen {
                 Class<?> clazz = Class.forName("java.awt.Desktop");
                 Object object = clazz.getMethod("getDesktop", new Class[0]).invoke(null);
 
-                clazz.getMethod("browse", new Class[] {URI.class}).invoke(object, new Object[] {uri});
+                clazz.getMethod("browse", new Class[] {URI.class}).invoke(object, uri);
             } catch (Throwable t) {}
         } else if (button == this.record) {
             if (this.movieExists)
@@ -184,18 +185,18 @@ public class GuiCaptureConfiguration extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
 
-        this.drawCenteredString(this.fontRenderer, "Video recording configuration", this.width / 2, 10, 0xffffff);
+        this.drawCenteredString(this.fontRenderer, I18n.format("minema.gui.title"), this.width / 2, 10, 0xffffff);
 
-        this.fontRenderer.drawStringWithShadow("Output name", this.name.x, this.name.y - 12, 0xffffff);
-        this.fontRenderer.drawStringWithShadow("Width", this.videoWidth.x, this.videoWidth.y - 12, 0xffffff);
-        this.fontRenderer.drawStringWithShadow("Height", this.videoHeight.x, this.videoHeight.y - 12, 0xffffff);
-        this.fontRenderer.drawStringWithShadow("Frame rate (FPS)", this.frameRate.x, this.frameRate.y - 12, 0xffffff);
-        this.fontRenderer.drawStringWithShadow("Frame limit", this.frameLimit.x, this.frameLimit.y - 12, 0xffffff);
-        this.fontRenderer.drawStringWithShadow("Engine speed", this.engineSpeed.x, this.engineSpeed.y - 12, 0xffffff);
-        this.fontRenderer.drawStringWithShadow("Ex. 1 = normal, 2 (2/1) = 2x faster, 0.5 (1/2) = 2x slower", this.engineSpeed.x, this.engineSpeed.y + 24, 0x888888);
+        this.fontRenderer.drawStringWithShadow(I18n.format("minema.gui.name"), this.name.x, this.name.y - 12, 0xffffff);
+        this.fontRenderer.drawStringWithShadow(I18n.format("minema.gui.width"), this.videoWidth.x, this.videoWidth.y - 12, 0xffffff);
+        this.fontRenderer.drawStringWithShadow(I18n.format("minema.gui.height"), this.videoHeight.x, this.videoHeight.y - 12, 0xffffff);
+        this.fontRenderer.drawStringWithShadow(I18n.format("minema.gui.fps"), this.frameRate.x, this.frameRate.y - 12, 0xffffff);
+        this.fontRenderer.drawStringWithShadow(I18n.format("minema.gui.limit"), this.frameLimit.x, this.frameLimit.y - 12, 0xffffff);
+        this.fontRenderer.drawStringWithShadow(I18n.format("minema.gui.speed"), this.engineSpeed.x, this.engineSpeed.y - 12, 0xffffff);
+        this.fontRenderer.drawStringWithShadow(I18n.format("minema.gui.speed.tooltip"), this.engineSpeed.x, this.engineSpeed.y + 24, 0x888888);
 
         if (this.movieExists)
-            this.fontRenderer.drawStringWithShadow("A file with such name exists already, pick another...", this.name.x, this.name.y + 22, 0xff3355);
+            this.fontRenderer.drawStringWithShadow(I18n.format("minema.gui.file_exists"), this.name.x, this.name.y + 22, 0xff3355);
 
         this.name.drawTextBox();
         this.videoWidth.drawTextBox();
