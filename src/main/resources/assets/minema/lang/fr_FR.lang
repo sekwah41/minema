@@ -1,0 +1,102 @@
+# messages
+minema.error.warning=Attention !
+minema.error.tick_sync=La synchronisation des ticks ne fonctionnera pas ! Cela ne fonctionne qu'en singleplayer.
+minema.error.chunk_loading=Le chargement instantané des chunks doit être utilisé en singleplayer pour en constater tous les effets.
+minema.error.chunk_preload=Le préchargement des chunks n'a pas pu être effectué
+minema.error.stacktrace=Regarder le log pour le descriptif complet
+minema.error.cause=Raison :
+
+minema.error.label=Erreur d'enregistrement :
+minema.error.enable_module=Impossible d'activer le module
+minema.error.disable_module=Impossible de désactiver le module
+minema.error.capture_path_permissions=Le chemin d'enregistrement '%s'n'a pas pu être créé car vous n'en avez pas la permission ! Merci d'en spécifier un nouveau.
+minema.error.capture_path_exists=Le chemin d'enregistrement '%s' est un fichier déjà existant ! Merci d'en spécifier un nouveau.
+minema.error.ffmpeg_not_exists=ffmepg n'a pas été trouvé à '%s' ! Vérifiez bien qu'il se trouve à cet endroit.
+minema.error.ffmpeg_error=Soit la vidéo n'a pas pu être exportée à '%s' car vous n'en aviez pas la permission, ou bien '%s' n'est pas exécutable. Vérifiez la présence de ffmpeg dans ce dossier.
+minema.error.export_frame=Impossible d'exporter l'image %s
+minema.error.size_change=Résolution d'affichage modifiée ! Actuelle : %dx%d Commencée avec: %dx%d
+
+# GUI
+minema.gui.title=Configuration de l'enregistrement vidéo
+minema.gui.movies_folder=Dossier d'enregistrement
+minema.gui.record=Enregistrement...
+
+minema.gui.name=Nom de sortie
+minema.gui.width=Largeur
+minema.gui.height=Hauteur
+minema.gui.fps=Fréquence d'images (FPS)
+minema.gui.limit=Limite de FPS
+minema.gui.speed=Vitesse du moteur
+minema.gui.speed.tooltip=Ex. 1 = normal, 2 (2/1) = 2x plus rapide, 0.5 (1/2) = 2x plus lente
+minema.gui.file_exists=Un fichier avec ce nom existe déjà, choisissez-en un autre...
+
+# keys
+key.categories.minema=Minema
+key.minema.capture=Démarrer/Arrêter l'enregistrement
+
+# commands
+commands.minema.usage=/minema <enable|disable>
+
+# config categories
+minema.config.encoding=Encodage
+minema.config.encoding.tooltip=Paramètres de l'encodage vidéo.
+
+minema.config.capturing=Enregistrement
+minema.config.capturing.tooltip=Paramètres de l'enregistrement vidéo.
+
+minema.config.engine=Moteur de capture
+minema.config.engine.tooltip=Paramètres avancés du moteur utilisés durant l'enregistrement.
+
+# config encoding
+minema.config.useVideoEncoder=Utiliser l'encodage vidéo
+minema.config.useVideoEncoder.tooltip=Lorsque activé, un programme d'encodage vidéo se chargera de recevoir des images BGR24 non compressées de Minema depuis l'input pipe standard.
+
+minema.config.videoEncoderPath=Chemin du programme d'encodage
+minema.config.videoEncoderPath.tooltip=Chemin vers l'exécutable du programme d'encodage. Le chemin que le programme d'encodage utilisera sera celui des sorties vidéo. Est ignoré si l'encodage est désactivé.
+
+minema.config.videoEncoderParams=Arguments d'encodage
+minema.config.videoEncoderParams.tooltip=Arguments pour le programme d'encodage vidéo. %%WIDTH%% - largeur de l'image, %%HEIGHT%% - hauteur de l'image, %%FPS%% - fréquence d'images. %%NAME%% - nom de la sortie vidéo. Est ignoré si l'encodage est désactivé.
+
+minema.config.snapResolution=Résolution instantanée
+minema.config.snapResolution.tooltip=Lorsque nécessaire, met à jour la résolution d'enregistrement de telle sorte que la largeur et la hauteur soient divisibles par le modulo. mod2 est suffisant pour ffmpeg, d'autres programmes d'encodage peuvent nécessiter davantage.
+
+# config capturing
+minema.config.frameWidth=Largeur
+minema.config.frameWidth.tooltip=Largeur de chaque image en pixels. Mettre à 0 pour utiliser la largeur actuelle de votre écran. Les valeurs différentes de 0 nécessitent que votre buffer d'images les supporte. Elles sont limitées à la résolution de textures maximum de votre GPU.
+
+minema.config.frameHeight=Hauteur
+minema.config.frameHeight.tooltip=Hauteur de chaque image en pixels. Mettre à 0 pour utiliser la hauteur actuelle de votre écran. Les valeurs différentes de 0 nécessitent que votre buffer d'images les supporte. Elles sont limitées à la résolution de textures maximum de votre GPU.
+
+minema.config.frameRate=Fréquence d'images
+minema.config.frameRate.tooltip=Fréquence d'images de l'enregistrement. Définit le nombre d'images enregistrées par seconde. Les valeurs décimales sont admises, par exemple : 23.976 pour le 24p NTSC. Mais parce que Minecraft fonctionne à 20 ticks par seconde, les fréquences d'images multiples de 20 sont recommandées pour une meilleure fluidité.
+
+minema.config.frameLimit=Nombre d'images limite
+minema.config.frameLimit.tooltip=Nombre d'images enregistrés avant un arrêt automatique. Mettre à -1 pour ne pas définir de limite.
+
+minema.config.capturePath=Chemin d'enregistrement
+minema.config.capturePath.tooltip=Dossier où les vidéos enregistrées sont sauvegardées. Si aucun chemin absolu n'est précisé, le chemin est relatif au dossier .minecraft.
+
+minema.config.showOverlay=Activer l'overlay
+minema.config.showOverlay.tooltip=Lorsque activé, davantage d'informations à propos de l'enregistrement sont affichées (menu F3). Ces informations seront affichées dans la vidéo aussi.
+
+minema.config.captureDepth=Enregistrer le depth buffer
+minema.config.captureDepth.tooltip=Lorsque activé, le depth buffer est enregistré de manière linéaire. Attention : le buffer limite certaines possibilités rendant l'enregistrement plus lent.
+
+minema.config.recordGui=Enregistrer l'interface
+minema.config.recordGui.tooltip=Lorsque désactivé, l'interface (la hotbar, la main, le curseur, etc) n'est pas enregistrée.
+
+minema.config.aaFastRenderFix=Antialiasing et fix de rendu rapide
+minema.config.aaFastRenderFix.tooltip=Permet de corriger les enregistrements ratés dus à l'antialiasing d'Optifine ou le rendu rapide d'une résolution personnalisée. Redimensionne le jeu.
+
+# config engine
+minema.config.engineSpeed=Vitesse du moteur
+minema.config.engineSpeed.tooltip=Modificateur de vitesse du fonctionnement du jeu. La vitesse par défaut est définie sur 1.0, ce qui équivaut à 20 ticks par seconde. Les valeurs au-delà et en-deçà accéléreront ou ralentiront l'horloge du jeu. 2.5, par exemple, signifie que le jeu tournera 2 fois et demi plus rapidement qu'en temps normal. Cette option peut s'avérer utile pour du slow motion et des time lapses. Est ignoré si la synchronisation de l'enregistrement est désactivée.
+
+minema.config.syncEngine=Synchronisation
+minema.config.syncEngine.tooltip=Lorsque activé, le serveur local ainsi que le client tournent de manière synchrone. Concrètement, cela remplace Minecraft par un moteur de rendu offline, cela permet le rendu et l'enregistrement de scènes très sophistiquées. Cette version de ShaderSync synchronise par ailleurs le shader mod conçu par karyonix (aussi compatible avec Optifine). Ne fonctionne uniquement qu'en singleplayer.
+
+minema.config.preloadChunks=Préchargement des chunks
+minema.config.preloadChunks.tooltip=Lorsque activé, Minema accélérera drastiquement le chargement des chunks pendant l'enregistrement. Cela ne fonctionne réellement qu'en singleplayer !
+
+minema.config.forcePreloadChunks=Forcer le préchargement des chunks
+minema.config.forcePreloadChunks.tooltip=Si le préchargement des chunks est activé et que cette option l'est aussi, tous les chunks dans la render distance seront chargés. Cela ne fonctionne réellement qu'en singleplayer !
