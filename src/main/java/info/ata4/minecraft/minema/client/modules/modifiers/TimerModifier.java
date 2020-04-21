@@ -25,6 +25,10 @@ public class TimerModifier extends CaptureModule {
 	private static FixedTimer timer = null;
 	private float defaultTps;
 
+	public static FixedTimer getTimer() {
+		return timer;
+	}
+
 	@Override
 	protected void doEnable() {
 		MinemaConfig cfg = Minema.instance.getConfig();

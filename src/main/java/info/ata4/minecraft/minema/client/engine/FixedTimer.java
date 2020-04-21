@@ -20,7 +20,7 @@ public class FixedTimer extends Timer {
 
 	private final float ticksPerSecond;
 	private final float framesPerSecond;
-	private final float timerSpeed;
+	private float timerSpeed;
 
 	public FixedTimer(float tps, float fps, float speed) {
 		super(tps);
@@ -35,6 +35,10 @@ public class FixedTimer extends Timer {
 		elapsedTicks = (int) elapsedPartialTicks;
 		elapsedPartialTicks -= elapsedTicks;
 		renderPartialTicks = elapsedPartialTicks;
+	}
+
+	public void setSpeed(float speed) {
+		this.timerSpeed = speed;
 	}
 
 }
