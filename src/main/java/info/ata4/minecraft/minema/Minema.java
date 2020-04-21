@@ -73,9 +73,9 @@ public class Minema {
 	@SubscribeEvent
 	public void onKeyInput(KeyInputEvent event) {
 		if (KEY_CAPTURE.isPressed()) {
-			if (GuiScreen.isShiftKeyDown() && !CaptureSession.singleton.isEnabled()) {
+			if (GuiScreen.isShiftKeyDown() && !CaptureSession.singleton.isEnabled())
 				Minecraft.getMinecraft().displayGuiScreen(new GuiCaptureConfiguration());
-			} else if (!CaptureSession.singleton.startCapture())
+			else if (!CaptureSession.singleton.startCapture())
 				CaptureSession.singleton.stopCapture();
 		}
 	}
