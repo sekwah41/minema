@@ -107,9 +107,9 @@ public class PipeFrameExporter extends FrameExporter {
 	 */
 	private String findFFMPEG(String path) {
 		File file = new File(path);
+		boolean isWin = Util.getOSType() == Util.EnumOS.WINDOWS;
 
 		if (file.isDirectory()) {
-			boolean isWin = Util.getOSType() == Util.EnumOS.WINDOWS;
 			String subpath = isWin ? "ffmpeg.exe" : "ffmpeg";
 			File bin = new File(file, subpath);
 
@@ -121,6 +121,12 @@ public class PipeFrameExporter extends FrameExporter {
 
 			if (bin.isFile()) {
 				return bin.getAbsolutePath();
+			}
+		} else if (isWin && !file.exists()) {
+			File exe = new File(path + ".exe");
+
+			if (exe.exists()) {
+				return exe.getAbsolutePath();
 			}
 		}
 
