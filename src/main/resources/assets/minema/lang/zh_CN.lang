@@ -68,7 +68,7 @@ minema.config.frameHeight=帧高度
 minema.config.frameHeight.tooltip=每次捕获帧的高度，单位为像素。设置为 0 则会应用当前窗口/屏幕的宽度。非零值需要帧缓冲区支持，并与您的 GPU 的最大纹理分辨率绑定。
 
 minema.config.frameRate=帧率
-minema.config.frameRate.tooltip=录制帧率，设置每游戏内秒记录的帧数。允许使用小数，例如：24p NTSC 的 23.976。由于 Minecraft 是以每秒 20 次为单位运行的，建议使用 20 的倍数的帧率来获得最佳的流畅度。
+minema.config.frameRate.tooltip=录制帧率，设置游戏内每秒记录的帧数。允许使用小数，例如：24p NTSC 的 23.976。由于 Minecraft 是以每秒 20 次为单位运行的，建议使用 20 的倍数的帧率来获得最佳的流畅度。
 
 minema.config.frameLimit=帧数上限
 minema.config.frameLimit.tooltip=在自动停止前录制要捕获的帧数。-1 表示没有限制。
@@ -80,7 +80,7 @@ minema.config.showOverlay=显示覆盖层
 minema.config.showOverlay.tooltip=启用后，则会在覆盖层 (F3 菜单) 中显示附加的捕获信息。请注意，这些信息在视频中也可以看到。
 
 minema.config.captureDepth=捕获深度缓冲器信息
-minema.config.captureDepth.tooltip=启用后，深度缓冲器的信息将被线性捕获。警告：某些情况下不适用于此缓冲器，因此会严重拖慢速度!
+minema.config.captureDepth.tooltip=启用后，深度缓冲器的信息将被线性捕获 (可获得深度图/视频)。警告：某些情况下不适用于此缓冲器，因此会严重拖慢速度!
 
 minema.config.recordGui=录制 GUI
 minema.config.recordGui.tooltip=禁用后，GUI (物品栏、手、准心等) 将不会被录制。
@@ -93,7 +93,7 @@ minema.config.engineSpeed=引擎速率
 minema.config.engineSpeed.tooltip=游戏时钟的速率修改器。默认值为 1.0，相当于每秒 20 Tick。更低或更高的值会加快或减慢游戏时间。例如，2.5，结果是正常速度的二分之一。对于慢动作或延时拍摄很有用。如果不启用捕获同步，此项将会被忽略。
 
 minema.config.syncEngine=同步
-minema.config.syncEngine.tooltip=启用后，本地服务器和客户端会以视频捕获帧率同步运行。这有效地将 Minecraft 变成了一个离线渲染器，并允许渲染和捕捉极其复杂的场景。本 ShaderSync 版本还同步了 karyonix 的 Shader mod (也兼容 Optifine)。仅适用于本地世界!
+minema.config.syncEngine.tooltip=启用后，本地服务器和客户端会以视频捕获帧率同步运行。这有效地将 Minecraft 变成了一个离线渲染器，并允许渲染和捕捉极其复杂的场景。本 ShaderSync 版本还同步了 karyonix 的 Shader mod (同时兼容 Optifine)。仅适用于本地世界!
 minema.config.preloadChunks=区块预加载
 minema.config.preloadChunks.tooltip=启用后，Minema 会在录制过程中大幅提升区块加载速度。此项仅在本地世界才会起效!
 
