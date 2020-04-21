@@ -31,11 +31,12 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
  * 
  * @author Gregosteros (minecraftforum) / daipenger (github)
  */
-@Mod(modid = Minema.MODID, name = Minema.NAME, clientSideOnly = true, acceptedMinecraftVersions = Minema.MCVERSION, version = "%VERSION%", guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
+@Mod(modid = Minema.MODID, name = Minema.NAME, clientSideOnly = true, acceptedMinecraftVersions = Minema.MCVERSION, version = Minema.VERSION, guiFactory = "info.ata4.minecraft.minema.client.config.MinemaConfigGuiFactory")
 public class Minema {
 
 	public static final String NAME = "Minema";
 	public static final String MODID = "minema";
+	public static final String VERSION = "%VERSION%";
 	public static final String MCVERSION = "1.12.2";
 
 	private static final String category = "key.categories.minema";
