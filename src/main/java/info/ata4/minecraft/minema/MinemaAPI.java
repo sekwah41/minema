@@ -2,6 +2,7 @@ package info.ata4.minecraft.minema;
 
 import info.ata4.minecraft.minema.client.engine.FixedTimer;
 import info.ata4.minecraft.minema.client.modules.modifiers.TimerModifier;
+import info.ata4.minecraft.minema.client.util.MinemaException;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -55,6 +56,14 @@ public class MinemaAPI {
 		}
 
 		return true;
+	}
+
+	public static String getMessage(Exception e) {
+		if (e.getCause() instanceof MinemaException){
+			 return e.getCause().getMessage();
+		}
+
+		return e.getMessage();
 	}
 
 }
