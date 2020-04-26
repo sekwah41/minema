@@ -1,10 +1,5 @@
 package info.ata4.minecraft.minema;
 
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import info.ata4.minecraft.minema.client.event.EndRenderEvent;
 import info.ata4.minecraft.minema.client.event.MidRenderEvent;
@@ -29,6 +24,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class CaptureSession {
 
 	public static final CaptureSession singleton = new CaptureSession();
@@ -50,6 +49,26 @@ public class CaptureSession {
 	}
 
 	public boolean startCapture() {
+		try {
+			return start();
+		} catch (MinemaException e) {
+			Utils.printPrettyError(e);
+			stopCapture();
+		} catch (Exception e) {
+			if (e.getCause() != null && e.getCause() instanceof MinemaException) {
+				Utils.printPrettyError(e);
+			} else {
+				Utils.printError(e);
+			}
+
+			stopCapture();
+		}
+
+		return true;
+	}
+
+	public boolean start() throws Exception
+	{
 		if (isEnabled)
 			return false;
 		isEnabled = true;
@@ -88,17 +107,10 @@ public class CaptureSession {
 			MinecraftForge.EVENT_BUS.register(this);
 
 			time = new CaptureTime(cfg.frameRate.get());
-		} catch (MinemaException e) {
-			Utils.printPrettyError(e);
-			stopCapture();
 		} catch (Exception e) {
-			if (e.getCause() != null && e.getCause() instanceof MinemaException) {
-				Utils.printPrettyError(e);
-			} else {
-				Utils.printError(e);
-			}
-
 			stopCapture();
+
+			throw e;
 		}
 
 		return true;

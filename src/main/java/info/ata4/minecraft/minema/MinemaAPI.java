@@ -43,13 +43,13 @@ public class MinemaAPI {
 	/**
 	 * Toggle Minema's recording
 	 */
-	public static boolean toggleRecording(boolean start) {
+	public static boolean toggleRecording(boolean start) throws Exception {
 		if (start == isRecording()) {
 			return false;
 		}
 
 		if (start) {
-			CaptureSession.singleton.startCapture();
+			CaptureSession.singleton.start();
 		} else {
 			CaptureSession.singleton.stopCapture();
 		}
