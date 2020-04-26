@@ -32,6 +32,7 @@ public class VideoHandler extends CaptureModule {
 	private DepthbufferReader depthReader;
 	private FrameExporter depthExport;
 	private ByteBuffer depthRemapping;
+	private float depthDistance;
 
 	private String colorName;
 	private String depthName;
@@ -47,6 +48,7 @@ public class VideoHandler extends CaptureModule {
 		this.startHeight = MC.displayHeight;
 		this.colorName = customName == null || customName.isEmpty() ? new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) : customName;
 		this.depthName = colorName.concat("depthBuffer");
+		this.depthDistance = cfg.captureDepthDistance.get().floatValue();
 		this.recordGui = cfg.recordGui.get();
 
 		boolean usePBO = GLContext.getCapabilities().GL_ARB_pixel_buffer_object;
@@ -145,7 +147,7 @@ public class VideoHandler extends CaptureModule {
 
 	private float linearizeDepth(float z) {
 		final float near = 0.05f;
-		final float far = Minecraft.getMinecraft().gameSettings.renderDistanceChunks << 4;
+		final float far = this.depthDistance > 0 ? this.depthDistance : Minecraft.getMinecraft().gameSettings.renderDistanceChunks << 4;
 		return 0.1f / (far + near - (2 * z - 1) * (far - near));
 	}
 
