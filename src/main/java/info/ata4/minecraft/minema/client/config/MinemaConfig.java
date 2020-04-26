@@ -9,12 +9,6 @@
  */
 package info.ata4.minecraft.minema.client.config;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.text.WordUtils;
-import org.lwjgl.opengl.Display;
-
 import info.ata4.minecraft.minema.util.config.ConfigBoolean;
 import info.ata4.minecraft.minema.util.config.ConfigDouble;
 import info.ata4.minecraft.minema.util.config.ConfigEnum;
@@ -26,6 +20,11 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.IConfigElement;
+import org.apache.commons.lang3.text.WordUtils;
+import org.lwjgl.opengl.Display;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -56,6 +55,7 @@ public class MinemaConfig {
 	public final ConfigString capturePath = new ConfigString("movies");
 	public final ConfigBoolean showOverlay = new ConfigBoolean(false);
 	public final ConfigBoolean captureDepth = new ConfigBoolean(false);
+	public final ConfigDouble captureDepthDistance = new ConfigDouble(0.0, 0.0, 256.0);
 	public final ConfigBoolean recordGui = new ConfigBoolean(true);
 	public final ConfigBoolean aaFastRenderFix = new ConfigBoolean(false);
 
@@ -91,6 +91,7 @@ public class MinemaConfig {
 		capturePath.link(cfg, CAPTURING_CATEGORY, "capturePath", LANG_KEY);
 		showOverlay.link(cfg, CAPTURING_CATEGORY, "showOverlay", LANG_KEY);
 		captureDepth.link(cfg, CAPTURING_CATEGORY, "captureDepth", LANG_KEY);
+		captureDepthDistance.link(cfg, CAPTURING_CATEGORY, "captureDepthDistance", LANG_KEY);
 		recordGui.link(cfg, CAPTURING_CATEGORY, "recordGui", LANG_KEY);
 		aaFastRenderFix.link(cfg, CAPTURING_CATEGORY, "aaFastRenderFix", LANG_KEY);
 
