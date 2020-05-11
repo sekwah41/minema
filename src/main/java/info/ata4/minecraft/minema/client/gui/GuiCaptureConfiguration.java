@@ -2,6 +2,7 @@ package info.ata4.minecraft.minema.client.gui;
 
 import info.ata4.minecraft.minema.CaptureSession;
 import info.ata4.minecraft.minema.Minema;
+import info.ata4.minecraft.minema.MinemaAPI;
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
 import info.ata4.minecraft.minema.client.modules.video.VideoHandler;
 import net.minecraft.client.gui.GuiButton;
@@ -90,8 +91,6 @@ public class GuiCaptureConfiguration extends GuiScreen {
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
-        MinemaConfig cfg = Minema.instance.getConfig();
-
         if (button == this.showConfig) {
             this.saveConfigValues();
             IModGuiFactory guiFactory = FMLClientHandler.instance().getGuiFactoryFor(Minema.container);
@@ -100,7 +99,7 @@ public class GuiCaptureConfiguration extends GuiScreen {
             this.mc.displayGuiScreen(newScreen);
         } else if (button == this.showRecordings) {
             try {
-                URI uri = new File(cfg.capturePath.get()).toURI();
+                URI uri = MinemaAPI.getCapturePath().toURI();
                 Class<?> clazz = Class.forName("java.awt.Desktop");
                 Object object = clazz.getMethod("getDesktop", new Class[0]).invoke(null);
 

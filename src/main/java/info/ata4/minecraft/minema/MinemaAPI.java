@@ -6,6 +6,8 @@ import info.ata4.minecraft.minema.client.util.MinemaException;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.File;
+
 /**
  * Minema API which can be used through reflection or by adding the
  * mod to dependency list
@@ -25,6 +27,13 @@ public class MinemaAPI {
 	 */
 	public static boolean isRecording() {
 		return CaptureSession.singleton.isEnabled();
+	}
+
+	/**
+	 * Get file to the capture folder
+	 */
+	public static File getCapturePath() {
+		return new File(Minema.instance.getConfig().capturePath.get());
 	}
 
 	/**
