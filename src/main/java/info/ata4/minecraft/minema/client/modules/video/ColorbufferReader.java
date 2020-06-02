@@ -1,5 +1,8 @@
 package info.ata4.minecraft.minema.client.modules.video;
 
+import net.minecraft.client.shader.Framebuffer;
+import org.lwjgl.opengl.Util;
+
 import static org.lwjgl.opengl.ARBBufferObject.glBindBufferARB;
 import static org.lwjgl.opengl.ARBBufferObject.glMapBufferARB;
 import static org.lwjgl.opengl.ARBBufferObject.glUnmapBufferARB;
@@ -11,15 +14,12 @@ import static org.lwjgl.opengl.GL11.glGetTexImage;
 import static org.lwjgl.opengl.GL11.glPixelStorei;
 import static org.lwjgl.opengl.GL11.glReadPixels;
 import static org.lwjgl.opengl.GL12.GL_BGR;
-
-import org.lwjgl.opengl.Util;
-
-import net.minecraft.client.shader.Framebuffer;
+import static org.lwjgl.opengl.GL12.GL_BGRA;
 
 public class ColorbufferReader extends CommonReader {
 
-	public ColorbufferReader(int width, int height, boolean isPBO, boolean isFBO) {
-		super(width, height, 3, GL_UNSIGNED_BYTE, GL_BGR, isPBO, isFBO);
+	public ColorbufferReader(int width, int height, boolean isPBO, boolean isFBO, boolean isAlpha) {
+		super(width, height, isAlpha ? 4 : 3, GL_UNSIGNED_BYTE, isAlpha ? GL_BGRA : GL_BGR, isPBO, isFBO);
 	}
 
 	@Override

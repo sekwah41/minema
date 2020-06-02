@@ -57,7 +57,7 @@ public class VideoHandler extends CaptureModule {
 		boolean recordDepth = cfg.captureDepth.get();
 
 		customName = null;
-		colorReader = new ColorbufferReader(startWidth, startHeight, usePBO, useFBO);
+		colorReader = new ColorbufferReader(startWidth, startHeight, usePBO, useFBO, Minema.instance.getConfig().useAlpha.get());
 		colorExport = usePipe ? new PipeFrameExporter() : new ImageFrameExporter();
 
 		if (recordDepth) {

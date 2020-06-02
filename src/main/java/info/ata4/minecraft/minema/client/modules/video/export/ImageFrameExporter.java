@@ -19,6 +19,7 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 
 import info.ata4.minecraft.minema.CaptureSession;
+import info.ata4.minecraft.minema.Minema;
 
 /**
  *
@@ -48,7 +49,7 @@ public class ImageFrameExporter extends FrameExporter {
 
 		// bits per pixel
 		tgah.position(16);
-		tgah.put((byte) 24);
+		tgah.put((byte) (Minema.instance.getConfig().useAlpha.get() ? 32 : 24));
 
 		tgah.rewind();
 
