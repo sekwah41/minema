@@ -68,7 +68,7 @@ public class MinemaAPI {
 	}
 
 	public static String getMessage(Exception e) {
-		if (e.getCause() instanceof MinemaException){
+		if (e.getCause() instanceof MinemaException) {
 			 return e.getCause().getMessage();
 		}
 

@@ -74,8 +74,11 @@ public class PipeFrameExporter extends FrameExporter {
 		// build encoder process and redirect output
 		ProcessBuilder pb = new ProcessBuilder(cmds);
 		pb.directory(path.toFile());
-		pb.redirectErrorStream(true);
-		pb.redirectOutput(path.resolve(movieName.concat(".log")).toFile());
+
+		if (cfg.enableEncoderLogging.get()) {
+			pb.redirectErrorStream(true);
+			pb.redirectOutput(path.resolve(movieName.concat(".log")).toFile());
+		}
 
 		try {
 			proc = pb.start();
