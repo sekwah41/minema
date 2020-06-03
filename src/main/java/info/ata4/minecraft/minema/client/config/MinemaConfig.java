@@ -47,7 +47,6 @@ public class MinemaConfig {
 	public final ConfigString videoEncoderParams = new ConfigString(
 			"-f rawvideo -pix_fmt bgr24 -s %WIDTH%x%HEIGHT% -r %FPS% -i - -vf vflip -c:v libx264 -preset ultrafast -tune zerolatency -qp 18 -pix_fmt yuv420p %NAME%.mp4");
 	public final ConfigEnum<SnapResolution> snapResolution = new ConfigEnum<>(SnapResolution.MOD2);
-	public final ConfigBoolean useAlpha = new ConfigBoolean(false);
 	public final ConfigBoolean enableEncoderLogging = new ConfigBoolean(true);
 
 	public final ConfigInteger frameWidth = new ConfigInteger(0, 0, MAX_TEXTURE_SIZE);
@@ -60,6 +59,7 @@ public class MinemaConfig {
 	public final ConfigDouble captureDepthDistance = new ConfigDouble(0.0, 0.0, 256.0);
 	public final ConfigBoolean recordGui = new ConfigBoolean(true);
 	public final ConfigBoolean aaFastRenderFix = new ConfigBoolean(false);
+	public final ConfigBoolean useAlpha = new ConfigBoolean(false);
 
 	public final ConfigDouble engineSpeed = new ConfigDouble(1.0, 0.01, 100.0);
 	public final ConfigBoolean syncEngine = new ConfigBoolean(true);
@@ -85,7 +85,6 @@ public class MinemaConfig {
 		videoEncoderPath.link(cfg, ENCODING_CATEGORY, "videoEncoderPath", LANG_KEY);
 		videoEncoderParams.link(cfg, ENCODING_CATEGORY, "videoEncoderParams", LANG_KEY);
 		snapResolution.link(cfg, ENCODING_CATEGORY, "snapResolution", LANG_KEY);
-		useAlpha.link(cfg, ENCODING_CATEGORY, "useAlpha", LANG_KEY);
 		enableEncoderLogging.link(cfg, ENCODING_CATEGORY, "enableEncoderLogging", LANG_KEY);
 
 		frameWidth.link(cfg, CAPTURING_CATEGORY, "frameWidth", LANG_KEY);
@@ -98,6 +97,7 @@ public class MinemaConfig {
 		captureDepthDistance.link(cfg, CAPTURING_CATEGORY, "captureDepthDistance", LANG_KEY);
 		recordGui.link(cfg, CAPTURING_CATEGORY, "recordGui", LANG_KEY);
 		aaFastRenderFix.link(cfg, CAPTURING_CATEGORY, "aaFastRenderFix", LANG_KEY);
+		useAlpha.link(cfg, CAPTURING_CATEGORY, "useAlpha", LANG_KEY);
 
 		engineSpeed.link(cfg, ENGINE_CATEGORY, "engineSpeed", LANG_KEY);
 		syncEngine.link(cfg, ENGINE_CATEGORY, "syncEngine", LANG_KEY);
