@@ -59,7 +59,7 @@ public abstract class FrameExporter {
 	}
 
 	public final void exportFrame(ByteBuffer buffer) throws Exception {
-		ShaderSync.freeze(false);
+		// ShaderSync.freeze(false);
 
 		// export frame in the background so that the next frame can be
 		// rendered in the meantime
