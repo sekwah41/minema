@@ -21,6 +21,10 @@ public class ShaderSync extends CaptureModule {
 		ShaderSync.freezeServer = freeze;
 	}
 
+	public static boolean noHolding() {
+		return Minema.instance.getConfig().heldFrames.get() <= 1;
+	}
+
 	@Override
 	protected void doEnable() {
 		MinemaConfig cfg = Minema.instance.getConfig();

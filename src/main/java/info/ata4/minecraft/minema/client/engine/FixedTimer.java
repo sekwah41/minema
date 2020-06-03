@@ -47,11 +47,17 @@ public class FixedTimer extends Timer {
 		frames += 1;
 
 		if (frames >= held) {
-			ShaderSync.freeze(false);
+			if (held > 1) {
+				ShaderSync.freeze(false);
+			}
+
 			frames = 0;
 			canRecord = true;
 		} else {
-			ShaderSync.freeze(true);
+			if (held > 1) {
+				ShaderSync.freeze(true);
+			}
+
 			elapsedTicks = 0;
 			return;
 		}
