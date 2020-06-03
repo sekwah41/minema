@@ -9,6 +9,8 @@
  */
 package info.ata4.minecraft.minema.client.util;
 
+import info.ata4.minecraft.minema.client.modules.modifiers.TimerModifier;
+
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
@@ -84,6 +86,10 @@ public class CaptureTime {
     }
 
     public void nextFrame() {
+        if (!TimerModifier.getTimer().canRecord()) {
+            return;
+        }
+
         prevFrameTime = currentFrameTime;
         currentFrameTime = System.nanoTime();
         frames++;

@@ -20,6 +20,7 @@ import java.nio.file.Path;
 
 import info.ata4.minecraft.minema.CaptureSession;
 import info.ata4.minecraft.minema.Minema;
+import info.ata4.minecraft.minema.client.modules.modifiers.TimerModifier;
 
 /**
  *
@@ -29,9 +30,11 @@ public class ImageFrameExporter extends FrameExporter {
 
 	@Override
 	protected void doExportFrame(ByteBuffer buffer) throws Exception {
-		String fileName = String.format("%06d.tga", CaptureSession.singleton.getTime().getNumFrames());
-		Path path = CaptureSession.singleton.getCaptureDir().resolve(movieName).resolve(fileName);
-		writeImage(path, buffer, width, height);
+		if (TimerModifier.getTimer().canRecord()) {
+			String fileName = String.format("%06d.tga", CaptureSession.singleton.getTime().getNumFrames());
+			Path path = CaptureSession.singleton.getCaptureDir().resolve(movieName).resolve(fileName);
+			writeImage(path, buffer, width, height);
+		}
 	}
 
 	private void writeImage(Path path, ByteBuffer buffer, int width, int height) throws IOException {
