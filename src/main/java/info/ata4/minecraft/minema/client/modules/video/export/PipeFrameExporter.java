@@ -12,6 +12,8 @@ package info.ata4.minecraft.minema.client.modules.video.export;
 import info.ata4.minecraft.minema.CaptureSession;
 import info.ata4.minecraft.minema.Minema;
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
+import info.ata4.minecraft.minema.client.modules.modifiers.TimerModifier;
+import info.ata4.minecraft.minema.client.util.CaptureTime;
 import info.ata4.minecraft.minema.client.util.MinemaException;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.Util;
@@ -42,7 +44,7 @@ public class PipeFrameExporter extends FrameExporter {
 
 	@Override
 	protected void doExportFrame(ByteBuffer buffer) throws Exception {
-		if (pipe.isOpen()) {
+		if (pipe.isOpen() && TimerModifier.getTimer().canRecord()) {
 			pipe.write(buffer);
 			buffer.rewind();
 		}

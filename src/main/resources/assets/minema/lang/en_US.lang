@@ -97,6 +97,9 @@ minema.config.recordGui.tooltip=If disabled, the GUI (hotbar, hand, crosshair, e
 minema.config.aaFastRenderFix=Antialiasing and fast render fix
 minema.config.aaFastRenderFix.tooltip=Enable to fix broken recordings when using optifine's antialiasing or fast render together with a custom resolution. Resizes the whole application window as a workaround.
 
+minema.config.heldFrames=Held frames
+minema.config.heldFrames.tooltip=This option allows you to hold a render frame for recording for specific time. It's only useful with ray tracing shaders like PTGI whose lighting takes a couple of render frames to catch up.
+
 # config engine
 minema.config.engineSpeed=Engine Speed
 minema.config.engineSpeed.tooltip=Speed modifier for the game clock. The default is 1.0, which equals 20 ticks per second. Lower or higher values will speed up or slow down the game time. 2.5, for example, results in two and a half of the normal speed. Useful for slow motion or time lapse effects. Ignored if the capturing is unsynchronized.

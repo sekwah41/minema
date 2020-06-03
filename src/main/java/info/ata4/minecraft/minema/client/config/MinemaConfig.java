@@ -60,6 +60,7 @@ public class MinemaConfig {
 	public final ConfigBoolean recordGui = new ConfigBoolean(true);
 	public final ConfigBoolean aaFastRenderFix = new ConfigBoolean(false);
 	public final ConfigBoolean useAlpha = new ConfigBoolean(false);
+	public final ConfigInteger heldFrames = new ConfigInteger(1, 1, 100);
 
 	public final ConfigDouble engineSpeed = new ConfigDouble(1.0, 0.01, 100.0);
 	public final ConfigBoolean syncEngine = new ConfigBoolean(true);
@@ -98,6 +99,7 @@ public class MinemaConfig {
 		recordGui.link(cfg, CAPTURING_CATEGORY, "recordGui", LANG_KEY);
 		aaFastRenderFix.link(cfg, CAPTURING_CATEGORY, "aaFastRenderFix", LANG_KEY);
 		useAlpha.link(cfg, CAPTURING_CATEGORY, "useAlpha", LANG_KEY);
+		heldFrames.link(cfg, CAPTURING_CATEGORY, "heldFrames", LANG_KEY);
 
 		engineSpeed.link(cfg, ENGINE_CATEGORY, "engineSpeed", LANG_KEY);
 		syncEngine.link(cfg, ENGINE_CATEGORY, "syncEngine", LANG_KEY);

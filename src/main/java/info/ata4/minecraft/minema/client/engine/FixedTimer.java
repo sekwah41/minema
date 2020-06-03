@@ -9,6 +9,7 @@
  */
 package info.ata4.minecraft.minema.client.engine;
 
+import info.ata4.minecraft.minema.Minema;
 import net.minecraft.util.Timer;
 
 /**
@@ -22,15 +23,36 @@ public class FixedTimer extends Timer {
 	private final float framesPerSecond;
 	private float timerSpeed;
 
+	private int held;
+	private int frames;
+	private boolean canRecord;
+
 	public FixedTimer(float tps, float fps, float speed) {
 		super(tps);
 		ticksPerSecond = tps;
 		framesPerSecond = fps;
 		timerSpeed = speed;
+
+		held = Math.max(1, Minema.instance.getConfig().heldFrames.get());
+	}
+
+	public boolean canRecord() {
+		return canRecord;
 	}
 
 	@Override
 	public void updateTimer() {
+		canRecord = false;
+		frames += 1;
+
+		if (frames >= held) {
+			frames = 0;
+			canRecord = true;
+		} else {
+			elapsedTicks = 0;
+			return;
+		}
+
 		elapsedPartialTicks += timerSpeed * (ticksPerSecond / framesPerSecond);
 		elapsedTicks = (int) elapsedPartialTicks;
 		elapsedPartialTicks -= elapsedTicks;
