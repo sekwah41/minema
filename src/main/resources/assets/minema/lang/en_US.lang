@@ -57,6 +57,9 @@ minema.config.videoEncoderPath.tooltip=Path to the video encoding executable. Th
 minema.config.videoEncoderParams=Encoder Arguments
 minema.config.videoEncoderParams.tooltip=Arguments for the video encoding program. Placeholders: %%WIDTH%% - frame width, %%HEIGHT%% - frame height, %%FPS%% - frame rate. %%NAME%% - video file name to use. Ignored if the video encoder is disabled.
 
+minema.config.videoEncoderParamsAlpha=Encoder Arguments (alpha)
+minema.config.videoEncoderParamsAlpha.tooltip=Arguments for the video encoding program when 'Use alpha' option is enabled. Placeholders are the same. For PNG sequences, you could use "-f rawvideo -pix_fmt rgb32 -s %WIDTH%x%HEIGHT% -r %FPS% -i - -vf vflip %NAME%_%d.png".
+
 minema.config.snapResolution=Snap Resolution
 minema.config.snapResolution.tooltip=If necessary, snaps the recording resolution to the next lower resolution so that width and height is divisible by this modulus. FFMpeg only needs mod2, some other encoders might need more.
 
@@ -95,7 +98,7 @@ minema.config.aaFastRenderFix=Antialiasing and fast render fix
 minema.config.aaFastRenderFix.tooltip=Enable to fix broken recordings when using optifine's antialiasing or fast render together with a custom resolution. Resizes the whole application window as a workaround.
 
 minema.config.useAlpha=Use alpha
-minema.config.useAlpha.tooltip=When enabled, alpha channel will be sent to ffmpeg as well, this requires an additional configuration of ffmpeg though, if you use encoder (for PNG sequence "-f rawvideo -pix_fmt rgb32 -s %WIDTH%x%HEIGHT% -r %FPS% -i - -vf vflip %NAME%_%d.png" or for a single QuickTime file "-f rawvideo -pix_fmt rgb32 -s %WIDTH%x%HEIGHT% -r %FPS% -i - -vf vflip -c:v qtrle %NAME%.mov"). In order to actually to appear, you need to use some mod features, like Blockbuster's chroma sky feature with 0% opacity. This also doesn't work with shaders, most of the times, as they ignore passing the alpha value (individual shader packs requires editing).
+minema.config.useAlpha.tooltip=When enabled, alpha channel will be sent to ffmpeg as well. In order to actually to appear, you need to use some mod features, like Blockbuster's chroma sky feature with 0% opacity (or keying option of image or custom model morphs). This also doesn't work with shaders, most of the times, as they ignore passing the alpha value (individual shader packs requires editing).
 
 minema.config.heldFrames=Held frames
 minema.config.heldFrames.tooltip=This option allows you to hold a render frame for recording for specific time. It's only useful with ray tracing shaders like PTGI whose lighting takes a couple of render frames to catch up.
