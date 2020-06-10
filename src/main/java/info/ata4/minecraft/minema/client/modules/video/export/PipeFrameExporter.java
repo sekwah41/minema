@@ -63,7 +63,7 @@ public class PipeFrameExporter extends FrameExporter {
 			throw new MinemaException(I18n.format("minema.error.ffmpeg_not_exists", ffmpeg));
 		}
 
-		String params = cfg.videoEncoderParams.get();
+		String params = cfg.useAlpha.get() ? cfg.videoEncoderParamsAlpha.get() : cfg.videoEncoderParams.get();
 		params = params.replace("%WIDTH%", String.valueOf(width));
 		params = params.replace("%HEIGHT%", String.valueOf(height));
 		params = params.replace("%FPS%", String.valueOf(cfg.frameRate.get()));
