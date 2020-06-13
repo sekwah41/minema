@@ -3,13 +3,19 @@ package info.ata4.minecraft.minema.shaderHook_coremod;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import java.util.Iterator;
@@ -26,12 +32,13 @@ public final class ShaderHookInjector implements IClassTransformer {
 
 	private static final String entityRenderer = "net.minecraft.client.renderer.EntityRenderer";
 	private static final String minecraftServer = "net.minecraft.server.MinecraftServer";
+	private static final String screenshotHelper = "net.minecraft.util.ScreenShotHelper";
 
 	@Override
 	public byte[] transform(final String obfuscated, final String deobfuscated, final byte[] bytes) {
 		// "Deobfuscated" is always passed as a deobfuscated argument, but the
 		// "obfuscated" argument may be deobfuscated or obfuscated
-		if (entityRenderer.equals(deobfuscated) || minecraftServer.equals(deobfuscated)) {
+		if (entityRenderer.equals(deobfuscated) || minecraftServer.equals(deobfuscated) || screenshotHelper.equals(deobfuscated)) {
 
 			final ClassReader classReader = new ClassReader(bytes);
 			final ClassNode classNode = new ClassNode();
@@ -43,6 +50,8 @@ public final class ShaderHookInjector implements IClassTransformer {
 				this.transformEntityRenderer(classNode, isInAlreadyDeobfuscatedState);
 			} else if (minecraftServer.equals(deobfuscated)) {
 				this.transformMinecraftServer(classNode, isInAlreadyDeobfuscatedState);
+			} else if (screenshotHelper.equals(deobfuscated)) {
+				this.transformScreenshotHelper(classNode, isInAlreadyDeobfuscatedState);
 			}
 
 			final ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
@@ -135,6 +144,41 @@ public final class ShaderHookInjector implements IClassTransformer {
 
 					method.instructions.insert(target, list);
 				}
+			}
+		}
+	}
+
+	private void transformScreenshotHelper(ClassNode classNode, boolean isInAlreadyDeobfuscatedState) {
+		for (MethodNode method : classNode.methods) {
+			if (!method.desc.contains("BufferedImage")) {
+				continue;
+			}
+
+			boolean passedBufferImage = false;
+			AbstractInsnNode target = null;
+			Iterator<AbstractInsnNode> it = method.instructions.iterator();
+
+			while (it.hasNext())
+			{
+				AbstractInsnNode node = it.next();
+
+				if (passedBufferImage && node.getOpcode() == Opcodes.ICONST_1) {
+					target = node;
+
+					break;
+				} else if (node.getOpcode() == Opcodes.NEW && ((TypeInsnNode) node).desc.endsWith("BufferedImage"))  {
+					passedBufferImage = true;
+
+					continue;
+				}
+			}
+
+			if (target != null)
+			{
+				AbstractInsnNode node = new MethodInsnNode(Opcodes.INVOKESTATIC, "info/ata4/minecraft/minema/client/util/ScreenshotHelper", "getType", "()I", false);
+
+				method.instructions.insert(target, node);
+				method.instructions.remove(target);
 			}
 		}
 	}
