@@ -3,9 +3,12 @@ package info.ata4.minecraft.minema;
 import info.ata4.minecraft.minema.client.gui.GuiCaptureConfiguration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.input.Keyboard;
 
 import info.ata4.minecraft.minema.client.config.MinemaConfig;
@@ -41,6 +44,7 @@ public class Minema {
 
 	private static final String category = "key.categories.minema";
 	private static final KeyBinding KEY_CAPTURE = new KeyBinding("key.minema.capture", Keyboard.KEY_F4, category);
+	private static final KeyBinding KEY_FREEZE = new KeyBinding("key.minema.freeze", Keyboard.KEY_HOME, category);
 
 	@Instance(MODID)
 	public static Minema instance;
@@ -58,6 +62,7 @@ public class Minema {
 	public void onInit(FMLInitializationEvent evt) {
 		ClientCommandHandler.instance.registerCommand(new CommandMinema());
 		ClientRegistry.registerKeyBinding(KEY_CAPTURE);
+		ClientRegistry.registerKeyBinding(KEY_FREEZE);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -70,6 +75,11 @@ public class Minema {
 		}
 	}
 
+	private static final String terrainFrustumMcp = "debugFixTerrainFrustum";
+	private static final String terrainFrustumNotch = "U";
+	private static final String terrainClipMcp = "debugFixedClippingHelper";
+	private static final String terrainClipNotch = "V";
+
 	@SubscribeEvent
 	public void onKeyInput(KeyInputEvent event) {
 		if (KEY_CAPTURE.isPressed()) {
@@ -77,6 +87,17 @@ public class Minema {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiCaptureConfiguration());
 			else if (!CaptureSession.singleton.startCapture())
 				CaptureSession.singleton.stopCapture();
+		}
+
+		if (KEY_FREEZE.isPressed()) {
+			RenderGlobal global = Minecraft.getMinecraft().renderGlobal;
+			Object helper = ReflectionHelper.getPrivateValue(RenderGlobal.class, global, terrainClipMcp, terrainFrustumNotch);
+
+			if (helper == null) {
+				ReflectionHelper.setPrivateValue(RenderGlobal.class, global, true, terrainFrustumMcp, terrainFrustumNotch);
+			} else {
+				ReflectionHelper.setPrivateValue(RenderGlobal.class, global, null, terrainClipMcp, terrainFrustumNotch);
+			}
 		}
 	}
 

@@ -33,6 +33,7 @@ minema.gui.file_exists=A file with such name exists already, pick another...
 # keys
 key.categories.minema=Minema
 key.minema.capture=Start/stop recording
+key.minema.freeze=Freeze chunks
 
 # commands
 commands.minema.usage=/minema <enable|disable>
