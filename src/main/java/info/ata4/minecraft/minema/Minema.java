@@ -26,6 +26,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
+import java.lang.reflect.Field;
+
 /**
  * Most of the files in this repo do have the old copyright notice about
  * Barracuda even though I have touched most of it, in some cases substantially.
@@ -44,7 +46,7 @@ public class Minema {
 
 	private static final String category = "key.categories.minema";
 	private static final KeyBinding KEY_CAPTURE = new KeyBinding("key.minema.capture", Keyboard.KEY_F4, category);
-	private static final KeyBinding KEY_FREEZE = new KeyBinding("key.minema.freeze", Keyboard.KEY_HOME, category);
+	/* private static final KeyBinding KEY_FREEZE = new KeyBinding("key.minema.freeze", Keyboard.KEY_HOME, category); */
 
 	@Instance(MODID)
 	public static Minema instance;
@@ -62,7 +64,7 @@ public class Minema {
 	public void onInit(FMLInitializationEvent evt) {
 		ClientCommandHandler.instance.registerCommand(new CommandMinema());
 		ClientRegistry.registerKeyBinding(KEY_CAPTURE);
-		ClientRegistry.registerKeyBinding(KEY_FREEZE);
+		/* ClientRegistry.registerKeyBinding(KEY_FREEZE); */
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -75,11 +77,6 @@ public class Minema {
 		}
 	}
 
-	private static final String terrainFrustumMcp = "debugFixTerrainFrustum";
-	private static final String terrainFrustumNotch = "U";
-	private static final String terrainClipMcp = "debugFixedClippingHelper";
-	private static final String terrainClipNotch = "V";
-
 	@SubscribeEvent
 	public void onKeyInput(KeyInputEvent event) {
 		if (KEY_CAPTURE.isPressed()) {
@@ -89,16 +86,27 @@ public class Minema {
 				CaptureSession.singleton.stopCapture();
 		}
 
-		if (KEY_FREEZE.isPressed()) {
-			RenderGlobal global = Minecraft.getMinecraft().renderGlobal;
-			Object helper = ReflectionHelper.getPrivateValue(RenderGlobal.class, global, terrainClipMcp, terrainFrustumNotch);
+		/* if (KEY_FREEZE.isPressed()) {
+			try {
+				final String terrainFrustumMcp = "debugFixTerrainFrustum";
+				final String terrainFrustumSrg = "field_175002_T";
+				final String terrainFrustumNotch = "U";
+				final String terrainClipMcp = "debugFixedClippingHelper";
+				final String terrainClipSrg = "field_175001_U";
+				final String terrainClipNotch = "V";
 
-			if (helper == null) {
-				ReflectionHelper.setPrivateValue(RenderGlobal.class, global, true, terrainFrustumMcp, terrainFrustumNotch);
-			} else {
-				ReflectionHelper.setPrivateValue(RenderGlobal.class, global, null, terrainClipMcp, terrainFrustumNotch);
+				RenderGlobal global = Minecraft.getMinecraft().renderGlobal;
+				Object helper = ReflectionHelper.getPrivateValue(RenderGlobal.class, global, terrainClipMcp, terrainFrustumSrg, terrainFrustumNotch);
+
+				if (helper == null) {
+					ReflectionHelper.setPrivateValue(RenderGlobal.class, global, true, terrainFrustumMcp, terrainFrustumSrg, terrainFrustumNotch);
+				} else {
+					ReflectionHelper.setPrivateValue(RenderGlobal.class, global, null, terrainClipMcp, terrainClipSrg, terrainClipNotch);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		}
+		} */
 	}
 
 	public MinemaConfig getConfig() {
