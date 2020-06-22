@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
+import java.io.File;
 import java.lang.reflect.Field;
 
 /**
@@ -56,7 +57,7 @@ public class Minema {
 
 	@EventHandler
 	public void onPreInit(FMLPreInitializationEvent e) {
-		config = new MinemaConfig(new Configuration(e.getSuggestedConfigurationFile()));
+		config = new MinemaConfig(e.getSuggestedConfigurationFile());
 		container = Loader.instance().activeModContainer();
 	}
 
