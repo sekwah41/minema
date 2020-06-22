@@ -76,10 +76,19 @@ public class PipeFrameExporter extends FrameExporter {
 		// build encoder process and redirect output
 		ProcessBuilder pb = new ProcessBuilder(cmds);
 		pb.directory(path.toFile());
+		pb.redirectErrorStream(true);
 
 		if (cfg.enableEncoderLogging.get()) {
-			pb.redirectErrorStream(true);
 			pb.redirectOutput(path.resolve(movieName.concat(".log")).toFile());
+		} else {
+			// Apparently not redirecting the output to a file can lead to a
+			// crash of the game, but like not the one with crash log and stuff,
+			// and not even the native one that yields one of those hs_err_PID.log
+			// files, but like total unlogged crash...
+			//
+			// So yeah, I guess I'll just redirect it to a dummy file
+			cfg.dummyLog.delete();
+			pb.redirectOutput(cfg.dummyLog);
 		}
 
 		try {

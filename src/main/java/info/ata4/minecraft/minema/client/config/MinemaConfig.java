@@ -23,6 +23,7 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 import org.apache.commons.lang3.text.WordUtils;
 import org.lwjgl.opengl.Display;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,6 +40,8 @@ public class MinemaConfig {
 	private final ConfigCategory ENCODING_CATEGORY;
 	private final ConfigCategory CAPTURING_CATEGORY;
 	private final ConfigCategory ENGINE_CATEGORY;
+
+	public final File dummyLog;
 
 	public static final String LANG_KEY = "minema.config";
 
@@ -70,7 +73,10 @@ public class MinemaConfig {
 	public final ConfigBoolean preloadChunks = new ConfigBoolean(true);
 	public final ConfigBoolean forcePreloadChunks = new ConfigBoolean(false);
 
-	public MinemaConfig(Configuration cfg) {
+	public MinemaConfig(File path) {
+		Configuration cfg = new Configuration(path);
+
+		this.dummyLog = new File(path.getParentFile(), "minema.log");
 		this.configForge = cfg;
 
 		ENCODING_CATEGORY = cfg.getCategory("encoding");
