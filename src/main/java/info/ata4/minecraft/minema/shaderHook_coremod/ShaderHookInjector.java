@@ -33,12 +33,17 @@ public final class ShaderHookInjector implements IClassTransformer {
 	private static final String entityRenderer = "net.minecraft.client.renderer.EntityRenderer";
 	private static final String minecraftServer = "net.minecraft.server.MinecraftServer";
 	private static final String screenshotHelper = "net.minecraft.util.ScreenShotHelper";
+	private static final String openGLHelper = "net.minecraft.client.renderer.OpenGlHelper";
+	private static final String glStateManager = "net.minecraft.client.renderer.GlStateManager";
 
 	@Override
 	public byte[] transform(final String obfuscated, final String deobfuscated, final byte[] bytes) {
 		// "Deobfuscated" is always passed as a deobfuscated argument, but the
 		// "obfuscated" argument may be deobfuscated or obfuscated
-		if (entityRenderer.equals(deobfuscated) || minecraftServer.equals(deobfuscated) || screenshotHelper.equals(deobfuscated)) {
+		if (entityRenderer.equals(deobfuscated) || minecraftServer.equals(deobfuscated)
+				|| screenshotHelper.equals(deobfuscated)
+				|| openGLHelper.equals(deobfuscated)
+				|| glStateManager.equals(deobfuscated)) {
 
 			final ClassReader classReader = new ClassReader(bytes);
 			final ClassNode classNode = new ClassNode();
@@ -52,6 +57,10 @@ public final class ShaderHookInjector implements IClassTransformer {
 				this.transformMinecraftServer(classNode, isInAlreadyDeobfuscatedState);
 			} else if (screenshotHelper.equals(deobfuscated)) {
 				this.transformScreenshotHelper(classNode, isInAlreadyDeobfuscatedState);
+			} else if (openGLHelper.equals(deobfuscated)) {
+				this.transformOpenGLHelper(classNode, isInAlreadyDeobfuscatedState);
+			} else if (glStateManager.equals(deobfuscated)) {
+				this.transformGlStateManager(classNode, isInAlreadyDeobfuscatedState);
 			}
 
 			final ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
@@ -180,6 +189,24 @@ public final class ShaderHookInjector implements IClassTransformer {
 				method.instructions.insert(target, node);
 				method.instructions.remove(target);
 			}
+		}
+	}
+
+	private void transformOpenGLHelper(ClassNode classNode, boolean isInAlreadyDeobfuscatedState) {
+
+		// test blendFunc tho may need to alter more
+
+		for (MethodNode method : classNode.methods) {
+			System.out.println(method);
+		}
+	}
+
+	private void transformGlStateManager(ClassNode classNode, boolean isInAlreadyDeobfuscatedState) {
+
+		// test blendFunc tho may need to alter more
+
+		for (MethodNode method : classNode.methods) {
+			System.out.println(method);
 		}
 	}
 

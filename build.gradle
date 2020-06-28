@@ -7,6 +7,12 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
+
+// For testing with other mods
+plugins {
+    id "com.wynprice.cursemaven" version "2.1.5"
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
@@ -62,6 +68,11 @@ dependencies {
     // except that these dependencies get remapped to your current MCP mappings
     //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
     //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // For testing alpha and other stuff
+    deobfCompile "curse.maven:metamorph:2989420"
+    deobfCompile "curse.maven:blockbuster:2989424"
+    deobfCompile "curse.maven:mchorses-mclib:2989418"
 
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
