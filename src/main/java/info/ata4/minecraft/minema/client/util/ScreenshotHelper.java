@@ -37,7 +37,11 @@ public class ScreenshotHelper
 
 	public static void tryBlendFuncSeparate(int srcFactor, int dstFactor, int srcFactorAlpha, int dstFactorAlpha) {
 		if(Minema.instance.getConfig().useAlphaScreenshot.get()) {
-			if(srcFactor == GL11.GL_SRC_ALPHA && dstFactor == GL11.GL_ONE_MINUS_SRC_ALPHA) {
+			if (srcFactor == GL11.GL_SRC_ALPHA && dstFactor == GL11.GL_ONE_MINUS_SRC_ALPHA
+					&& srcFactorAlpha == GL11.GL_ONE_MINUS_DST_ALPHA && dstFactorAlpha == GL11.GL_ONE) {
+				OpenGlHelper.glBlendFunc(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+			}
+			else if (srcFactor == GL11.GL_SRC_ALPHA && dstFactor == GL11.GL_ONE_MINUS_SRC_ALPHA) {
 				magicBlendFunction();
 			}
 			else {
@@ -50,7 +54,7 @@ public class ScreenshotHelper
 	}
 
 	public static void magicBlendFunction() {
-		GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA,
+		GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA,
 				GL11.GL_ONE_MINUS_DST_ALPHA, GL11.GL_ONE);
 	}
 }
