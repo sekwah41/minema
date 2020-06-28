@@ -192,21 +192,78 @@ public final class ShaderHookInjector implements IClassTransformer {
 		}
 	}
 
+	/**
+	 * look at {@link net.minecraftforge.client.GuiIngameForge#renderChat(int, int)}
+	 * @param classNode
+	 * @param isInAlreadyDeobfuscatedState
+	 */
 	private void transformOpenGLHelper(ClassNode classNode, boolean isInAlreadyDeobfuscatedState) {
 
 		// test blendFunc tho may need to alter more
 
 		for (MethodNode method : classNode.methods) {
-			System.out.println(method);
+			/**
+			 * Look at it though the GLStateManager may be more important
+			 * {@link net.minecraft.client.renderer.OpenGlHelper#glBlendFunc(int, int, int, int)}
+			 */
+			//System.out.println(method);
 		}
 	}
 
 	private void transformGlStateManager(ClassNode classNode, boolean isInAlreadyDeobfuscatedState) {
 
 		// test blendFunc tho may need to alter more
-
 		for (MethodNode method : classNode.methods) {
-			System.out.println(method);
+
+			/**
+			 * {@link net.minecraft.client.renderer.GlStateManager#blendFunc(int, int)}
+			 */
+			if(method.name.equals("blendFunc") && method.desc.equals("(II)V")) {
+
+				AbstractInsnNode invokeNode = null;
+				Iterator<AbstractInsnNode> it = method.instructions.iterator();
+
+				while (it.hasNext())
+				{
+					AbstractInsnNode node = it.next();
+					if (node.getOpcode() == Opcodes.INVOKESTATIC) {
+						invokeNode = node;
+					}
+				}
+
+				if(invokeNode != null) {
+					AbstractInsnNode replacementNode = new MethodInsnNode(Opcodes.INVOKESTATIC,
+							"info/ata4/minecraft/minema/client/util/ScreenshotHelper", "replaceBlendFunc",
+							"(II)V", false);
+					method.instructions.insert(invokeNode, replacementNode);
+					method.instructions.remove(invokeNode);
+				}
+			}
+
+			/**
+			 * {@link net.minecraft.client.renderer.GlStateManager#tryBlendFuncSeparate(int, int, int, int)}
+			 */
+			if(method.name.equals("tryBlendFuncSeparate") && method.desc.equals("(IIII)V")) {
+
+				AbstractInsnNode invokeNode = null;
+				Iterator<AbstractInsnNode> it = method.instructions.iterator();
+
+				while (it.hasNext())
+				{
+					AbstractInsnNode node = it.next();
+					if (node.getOpcode() == Opcodes.INVOKESTATIC) {
+						invokeNode = node;
+					}
+				}
+
+				if(invokeNode != null) {
+					AbstractInsnNode replacementNode = new MethodInsnNode(Opcodes.INVOKESTATIC,
+							"info/ata4/minecraft/minema/client/util/ScreenshotHelper", "tryBlendFuncSeparate",
+							"(IIII)V", false);
+					method.instructions.insert(invokeNode, replacementNode);
+					method.instructions.remove(invokeNode);
+				}
+			}
 		}
 	}
 

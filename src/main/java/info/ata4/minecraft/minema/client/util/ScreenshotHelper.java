@@ -1,6 +1,8 @@
 package info.ata4.minecraft.minema.client.util;
 
 import info.ata4.minecraft.minema.Minema;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
@@ -19,11 +21,35 @@ public class ScreenshotHelper
 	/**
 	 * Replace the call for normal blend functions
 	 */
-	public static void  replaceBlendFunc(int srcFactor, int dstFactor) {
-		if(srcFactor == GL11.GL_SRC_ALPHA && dstFactor == GL11.GL_ONE_MINUS_SRC_ALPHA) {
-
+	public static void replaceBlendFunc(int srcFactor, int dstFactor) {
+		if(Minema.instance.getConfig().useAlphaScreenshot.get()) {
+			if(srcFactor == GL11.GL_SRC_ALPHA && dstFactor == GL11.GL_ONE_MINUS_SRC_ALPHA) {
+				magicBlendFunction();
+			}
+			else {
+				GL11.glBlendFunc(srcFactor, dstFactor);
+			}
 		}
-		GL11.glBlendFunc(srcFactor, dstFactor);
+		else {
+			GL11.glBlendFunc(srcFactor, dstFactor);
+		}
+	}
+
+	public static void tryBlendFuncSeparate(int srcFactor, int dstFactor, int srcFactorAlpha, int dstFactorAlpha) {
+		if(Minema.instance.getConfig().useAlphaScreenshot.get()) {
+			if(srcFactor == GL11.GL_SRC_ALPHA && dstFactor == GL11.GL_ONE_MINUS_SRC_ALPHA) {
+				magicBlendFunction();
+			}
+			else {
+				OpenGlHelper.glBlendFunc(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+			}
+		}
+		else {
+			OpenGlHelper.glBlendFunc(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+		}
+	}
+
+	public static void magicBlendFunction() {
 		GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA,
 				GL11.GL_ONE_MINUS_DST_ALPHA, GL11.GL_ONE);
 	}
