@@ -33,7 +33,6 @@ public final class ShaderHookInjector implements IClassTransformer {
 	private static final String entityRenderer = "net.minecraft.client.renderer.EntityRenderer";
 	private static final String minecraftServer = "net.minecraft.server.MinecraftServer";
 	private static final String screenshotHelper = "net.minecraft.util.ScreenShotHelper";
-	private static final String openGLHelper = "net.minecraft.client.renderer.OpenGlHelper";
 	private static final String glStateManager = "net.minecraft.client.renderer.GlStateManager";
 
 	@Override
@@ -42,7 +41,6 @@ public final class ShaderHookInjector implements IClassTransformer {
 		// "obfuscated" argument may be deobfuscated or obfuscated
 		if (entityRenderer.equals(deobfuscated) || minecraftServer.equals(deobfuscated)
 				|| screenshotHelper.equals(deobfuscated)
-				|| openGLHelper.equals(deobfuscated)
 				|| glStateManager.equals(deobfuscated)) {
 
 			final ClassReader classReader = new ClassReader(bytes);
@@ -57,8 +55,6 @@ public final class ShaderHookInjector implements IClassTransformer {
 				this.transformMinecraftServer(classNode, isInAlreadyDeobfuscatedState);
 			} else if (screenshotHelper.equals(deobfuscated)) {
 				this.transformScreenshotHelper(classNode, isInAlreadyDeobfuscatedState);
-			} else if (openGLHelper.equals(deobfuscated)) {
-				this.transformOpenGLHelper(classNode, isInAlreadyDeobfuscatedState);
 			} else if (glStateManager.equals(deobfuscated)) {
 				this.transformGlStateManager(classNode, isInAlreadyDeobfuscatedState);
 			}
@@ -189,24 +185,6 @@ public final class ShaderHookInjector implements IClassTransformer {
 				method.instructions.insert(target, node);
 				method.instructions.remove(target);
 			}
-		}
-	}
-
-	/**
-	 * look at {@link net.minecraftforge.client.GuiIngameForge#renderChat(int, int)}
-	 * @param classNode
-	 * @param isInAlreadyDeobfuscatedState
-	 */
-	private void transformOpenGLHelper(ClassNode classNode, boolean isInAlreadyDeobfuscatedState) {
-
-		// test blendFunc tho may need to alter more
-
-		for (MethodNode method : classNode.methods) {
-			/**
-			 * Look at it though the GLStateManager may be more important
-			 * {@link net.minecraft.client.renderer.OpenGlHelper#glBlendFunc(int, int, int, int)}
-			 */
-			//System.out.println(method);
 		}
 	}
 
